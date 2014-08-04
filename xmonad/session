@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# log commands as they are executed
+set -x
+date
+
+# for colored man pages https://wiki.archlinux.org/index.php/man_page#rxvt-unicode
+xrdb -merge .Xresources
+
+xsetroot -solid '#000'&
+# map caps lock as extra escape
+#xmodmap -e 'clear Lock' -e 'keycode 0x42 = Escape'&
+#
+# trayer --edge top --align left --SetDockType true --SetPartialStrut true --expand true --width 15 --height 19 --transparent true --tint 0x000000 &
+
+# Killing any existing helpers
+for P in stalonetray xfce4-volumed volumeicon nm-applet xscreensaver dropbox pcmanfm xfce4-power-manager; do pkill -e $P; done
+
+# icon tray
+stalonetray -p -i 18 -geometry 12x1 --grow-gravity E --kludges force_icons_size &
+
+# enables XF86 media buttons for volume/mute
+# use config from .xmonad directory
+mkdir -p $HOME/.config/volumeicon/
+ln $HOME/.xmonad/volumeicon $HOME/.config/volumeicon/volumeicon -sTfv
+# taskbar volume icon
+volumeicon &
+
+# taskbar icon with profile selection
+nm-applet &
+
+# screensaver daemon will activate as configured
+xscreensaver -no-splash &
+
+# start service and show taskbar icon
+dropbox start &
+
+# watching for media changes etc
+pcmanfm --daemon-mode &
+
+# power down monitor etc as configured, display taskbar icon
+xfce4-power-manager &
+
+# turn off caps lock
+setxkbmap -option caps:none &
+
+set -x
