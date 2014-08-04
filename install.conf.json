@@ -1,6 +1,14 @@
 [
     {
-        "link": {}
+        "link": {
+ 	    "~/.bashrc": "bashrc"
+            ,"~/.Xresources": "Xresources"
+            ,"~/.xmonad/xmonad.hs": "xmonad/xmonad.hs"
+            ,"~/.xmonad/xmobar.hs": "xmonad/xmobar.hs"
+            ,"~/.xmonad/xmobar2.hs": "xmonad/xmobar2.hs"
+            ,"~/.xmonad/session": "xmonad/session"
+            ,"~/.xmonad/dependencies": "xmonad/dependencies"
+         }
     },
     {
         "shell": []
