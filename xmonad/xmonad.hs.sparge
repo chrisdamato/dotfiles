@@ -83,8 +83,7 @@ getSortByIndex' = mkWsSort getWsCompare'
 -- Dependencids
 -- xdotool, wmctrl
 
-myTerminal = "urxvt256c"
--- myTerminal = "urxvt256c  +sb -fg white -bg black -fn  \"xft:Droid Sans Mono:pixelsize=13:antialias=true\" +ptab -letsp -1 -fade 30 -keysym.Home \"\\033[1~\" -keysym.End \"\\033[4~\" -keysym.C-Left \"\\033[1;5D\" -keysym.C-Right \"\\033[1;5C\" -tn xterm-color -sl 65535"
+myTerminal = "urxvt  +sb -fg white -bg black -fn  \"xft:Droid Sans Mono:pixelsize=13:antialias=true\" +ptab -letsp 0 -fade 30 -keysym.Home \"\\033[1~\" -keysym.End \"\\033[4~\" -keysym.C-Left \"\\033[1;5D\" -keysym.C-Right \"\\033[1;5C\" -tn xterm-color -sl 65535"
 -- window class, use `M-c i` to inspect the window class name
 myTerminalClass = "URxvt"
 myBorderWidth   = 2
@@ -173,12 +172,12 @@ myLogHook h j = do
   dynamicLogWithPP $ wsPP { ppOutput = hPutStrLn h }
   dynamicLogWithPP $ wsPP { ppOutput = hPutStrLn j }
 
-wsPP = defaultPP 
+wsPP = defaultPP
         { ppOrder               = \(ws:l:t:_)   -> [t, l, ws]
         , ppCurrent             = xmobarColor   colorBlue       colorWhite . pad
-        , ppUrgent              = xmobarColor   colorGreen      colorDarkGray . pad 
-        , ppHidden              = xmobarColor   colorWhite      colorDarkGray . pad 
-        --, ppHiddenNoWindows     = xmobarColor   colorDarkGray   colorDarkGray . pad 
+        , ppUrgent              = xmobarColor   colorGreen      colorDarkGray . pad
+        , ppHidden              = xmobarColor   colorWhite      colorDarkGray . pad
+        --, ppHiddenNoWindows     = xmobarColor   colorDarkGray   colorDarkGray . pad
         , ppTitle               = xmobarColor   colorWhite      colorDarkGray . shorten 80
         , ppWsSep               = " "
         , ppSep                 = "         "
@@ -219,7 +218,7 @@ pads = [ NS "term"
 -- unused char
 -- a, x, y, ', m
 myKeys =  \conf -> mkKeymap conf $
-    [ 
+    [
       ("M-S-<Return>", spawn $ XMonad.terminal conf) -- terminal
     , ("M-`", namedScratchpadAction pads "term") -- quake terminal
 
@@ -239,9 +238,9 @@ myKeys =  \conf -> mkKeymap conf $
     -- backslash for work browser, z for home
     -- shift+mod for new, mod for switch to
     , ("M-\\", runOrRaiseNext "google-chrome-work" (className =? "Google-chrome-work" <||> className =? "Google-chrome" <||> className =? "Chromium")) -- browser
-    , ("M-S-\\", spawn "google-chrome-work" ) 
+    , ("M-S-\\", spawn "google-chrome-work" )
     , ("M-z", runOrRaiseNext "google-chrome-home" (className =? "Google-chrome-home" <||> className =? "Google-chrome" <||> className =? "Chromium")) -- browser
-    , ("M-S-z", spawn "google-chrome-home" ) 
+    , ("M-S-z", spawn "google-chrome-home" )
     , ("XM-i", runOrRaiseNext "emacs-dwim" (className =? "Emacs")) --emacs
     , ("M-u", runOrRaiseNext myTerminal (className =? myTerminalClass <&&> resource /=? "scratchpad")) -- raise next terminal
 
@@ -397,10 +396,10 @@ dmenuXinerama opts = do
     io $ runProcessWithInput "dmenu" [ "-fn"
                                      , (myFont ++ "-14")
                                      , "-nb"
-                                     , "#1e2320" 
-                                     , "-nf" 
-                                     , "#acbc90" 
-                                     , "-sf" 
+                                     , "#1e2320"
+                                     , "-nf"
+                                     , "#acbc90"
+                                     , "-sf"
                                      , "#0f1a0f"
                                      , "-sb"
                                      , "#f0dfaf"
@@ -439,7 +438,7 @@ myMouseBindings (XConfig {XMonad.modMask = modMask}) = M.fromList $
 ------------------------------------------------------------------------
 -- Layouts:
 
-data MyTransformers = SIDEBAR 
+data MyTransformers = SIDEBAR
                     | MAG
                     | RFULL
   deriving (Read, Show, Eq, Typeable)
@@ -454,7 +453,7 @@ myLayout = configurableNavigation (navigateColor myActiveBorderColor)
            $ mkToggle (single MAG)
            $ mkToggle (single FULL)
            $ (onWorkspace "8.gimp" $ named "gimp" $ withIM (2/11) (Role "gimp-toolbox") $ big')
-           $ mkToggle (single SIDEBAR) 
+           $ mkToggle (single SIDEBAR)
            $ layouts
   where
     layouts  = cols' ||| twopane' ||| rows' ||| tabs' ||| grid' ||| big'
@@ -474,7 +473,7 @@ myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-"]
 
 myFloatManageHook = composeOne . concat $
     [ [ (className =? "Gsimplecal" -?> doRectFloat (W.RationalRect 0.75 0.02 0.25 0.23))
---      , (className =? "VirtualBox" -?> doRectFloat (W.RationalRect 0 0 1 1))
+      , (className =? "VirtualBox" -?> doRectFloat (W.RationalRect 0 0 1 1))
       , (className =? "Screenkey" -?> doIgnore)
       , (role =? "gimp-toolbox" -?> doMaster)
       ]
@@ -487,7 +486,7 @@ myFloatManageHook = composeOne . concat $
       doCenterFloat' = doCenterFloat <+> doMaster
       doMaster = doF W.shiftMaster
       role = stringProperty "WM_WINDOW_ROLE"
-      
+
 mySmartFloatManageHook = composeOne . concat $
   [ [ (isFullscreen -?> doFullFloat') ]
   , [ className =? x -?> doFloat' | x <- cFloat ]
@@ -510,7 +509,7 @@ myShiftManageHook = composeOne . concat $
                     , ("Skype", "9.im")
                     , ("Gimp", "8.gimp")
                     , ("Emacs", "3.emacs")
---                    , ("VirtualBox","7")
+                    , ("VirtualBox","7")
                     ]
       ]
     , [ (resource =? "DTA" <&&> role =? "Manager" -?> doShift "0") ]
