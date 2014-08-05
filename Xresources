@@ -149,10 +149,10 @@ urxvt256c*foreground: white
 urxvt256c*background: black
 
 *color0:  #2E3436
-*color1:  #b40000
+*color1:  #c40000
 *color2:  #4E9A06
 *color3:  #C4A000
-*color4:  #3465D4
+*color4:  #6485D4
 *color5:  #75507B
 *color6:  #ce5c00
 *color7:  #babdb9
