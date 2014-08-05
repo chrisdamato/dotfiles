@@ -12,7 +12,6 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
   # profile-type settings
   export _V=$_VV
 
-  echo "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
   # this script replaces both .bashrc and .bash_profile
   # cleanup any traces of previous schemes
@@ -299,6 +298,8 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   function see { IFS="|";transmission-remote -l |cut -c58-|grep -iE "^$*"|sed 's/ \+/\t/'; }
 
   function moviemerge { ffmpeg -f concat -i <(for F in ${@:2}; do echo "file $PWD/$F"; done ) -c copy "$1"; }
+  
+  echo "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
   HELLO="$( lsb_release -ds | fmt )"
   [[ -z $HELLO ]] && HELLO=$(cat /etc/redhat-release)
