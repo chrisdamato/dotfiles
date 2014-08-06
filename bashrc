@@ -163,10 +163,14 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   	# colored man pages thanks Arch wiki
 	# http://unix.stackexchange.com/a/7431
 	man() {
-		env LESS_TERMCAP_md=$'\E[01;31m' \
+		# md, me = bold (red)
+		# se, so = highlight
+		# us, ue = underlined
+		env \
+		LESS_TERMCAP_md=$'\E[01;31m' \
 		LESS_TERMCAP_me=$'\E[0m' \
 		LESS_TERMCAP_se=$'\E[0m' \
-		LESS_TERMCAP_so=$'\E[01;32m' \
+		LESS_TERMCAP_so=$'\E[01;37;42m' \
 		LESS_TERMCAP_us=$'\E[04;33m' \
 		LESS_TERMCAP_ue=$'\E[0m' \
 		GROFF_NO_SGR=1 \
