@@ -1,0 +1,5 @@
+[geogebra]
+name=geogebra
+baseurl=http://www.geogebra.net/linux/rpm/i386
+enabled=1
+gpgcheck=1
