@@ -457,10 +457,11 @@ myLayout = configurableNavigation (navigateColor myActiveBorderColor)
            $ mkToggle (single SIDEBAR) 
            $ layouts
   where
-    layouts  = cols' ||| twopane' ||| rows' ||| tabs' ||| grid' ||| big'
+    layouts  = cols' ||| rows' ||| twopane' ||| tabs' ||| grid' ||| big'
     cols'    = named "cols" $ layoutHints $ deco $ multiCol [1] 2 (3/100) (1/2)
+    rows'    = named "rows" $ Mirror $ layoutHints $ deco $ multiCol [1] 0 (2/100) (4/7)
+--    rows'    = named "rows" $ layoutHints $ deco $ multiRow [1] 2 (3/100) (1/2)
     twopane' = named "two"  $ layoutHints $ TwoPane (3/100) (3/7)
-    rows'    = named "rows" $ Mirror $ layoutHints $ deco $ multiCol [2] 3 (2/100) (4/7)
     tabs'    = named "tab"  $ layoutHints $ tabs
     grid'    = named "grid" $ layoutHints $ deco $ Grid (16/10)
     big'     = named "big"  $ layoutHints $ deco $ Mirror $ OneBig (3/4) (19/24)
