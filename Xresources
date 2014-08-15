@@ -43,8 +43,8 @@
 ! URxvt*externalBorder:                 number
 ! URxvt*fadeColor:                      color
 ! URxvt*fading:                         30
-URxvt*font:                           xft:Droid Sans Mono:pixelsize=13
-URxvt*boldFont:                           xft:Droid Sans Mono:pixelsize=13:bold
+URxvt*font:                           xft:Droid Sans Mono:pixelsize=11
+URxvt*boldFont:                           xft:Droid Sans Mono:pixelsize=11:bold
 URxvt*italicFont:                           xft:Liberation Mono:italic
 URxvt*boldItalicFont:                           xft:Liberation Mono:italic:bold
 
@@ -93,7 +93,7 @@ URxvt*pastableTabs:                   true
 ! URxvt*remote-clipboard.fetch:         string
 ! URxvt*remote-clipboard.store:         string
 ! URxvt*reverseVideo:                   boolean
-! URxvt*saveLines:                      number
+URxvt*saveLines:                      65535
 URxvt*scrollBar:                      false
 ! URxvt*scrollBar_align:                mode
 ! URxvt*scrollBar_floating:             boolean
