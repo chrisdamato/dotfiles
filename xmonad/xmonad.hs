@@ -83,8 +83,14 @@ getSortByIndex' = mkWsSort getWsCompare'
 -- Dependencids
 -- xdotool, wmctrl
 
+<<<<<<< HEAD
 -- myTerminal = "gnome-terminal" -- stupid settings with dconf and css. can't make scrollbar go away
 myTerminal = "xfce4-terminal"
+=======
+myTerminal = "gnome-terminal"
+-- myTerminal = "mate-terminal"
+-- myTerminal = "xfce4-terminal"
+>>>>>>> f542a3ea7310b312dbcb69d199e5e64b48349d08
 -- myTerminal = "urxvt256c"
 -- myTerminal = "urxvt256c  +sb -fg white -bg black -fn  \"xft:Droid Sans Mono:pixelsize=13:antialias=true\" +ptab -letsp -1 -fade 30 -keysym.Home \"\\033[1~\" -keysym.End \"\\033[4~\" -keysym.C-Left \"\\033[1;5D\" -keysym.C-Right \"\\033[1;5C\" -tn xterm-color -sl 65535"
 -- window class, use `M-c i` to inspect the window class name
@@ -244,7 +250,7 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-S-\\", spawn "google-chrome-work" ) 
     , ("M-z", runOrRaiseNext "google-chrome-home" (className =? "Google-chrome-home" <||> className =? "Google-chrome" <||> className =? "Chromium")) -- browser
     , ("M-S-z", spawn "google-chrome-home" ) 
-    , ("XM-i", runOrRaiseNext "emacs-dwim" (className =? "Emacs")) --emacs
+    , ("M-i", runOrRaiseNext "sublime_text" (className =? "sublime_text")) --text editor
     , ("M-u", runOrRaiseNext myTerminal (className =? myTerminalClass <&&> resource /=? "scratchpad")) -- raise next terminal
 
     , ("M-c t", raiseNextMaybe (spawn $ myTerminal ++ " -name htop -e htop") (resource =? "htop")) -- Top
@@ -255,7 +261,7 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-c o", AL.launchApp mySP "xopen" ) -- open prompt
     , ("M-c x", spawn "xkill") -- Kill X app
     , ("M-c d", spawn "dropbox stop && dropbox start") -- Restart Dropbox
-    , ("M-c S-d", spawn "notify-send -i dropbox `dropbox status`") -- Dropbox Status
+    , ("M-c S-d", spawn "notify-send -i dropbox \"`dropbox status`\"") -- Dropbox Status
     , ("M-c c", runOrRaiseNext "gsimplecal" (className =? "Gsimplecal")) --gsimplecal
 
     , ("M-C-S-l", spawn "xscreensaver-command -lock") -- Lock screen
@@ -460,7 +466,8 @@ myLayout = configurableNavigation (navigateColor myActiveBorderColor)
            $ layouts
   where
     layouts  = cols' ||| rows' ||| twopane' ||| tabs' ||| grid' ||| big'
-    cols'    = named "cols" $ layoutHints $ deco $ multiCol [1] 2 (3/100) (1/2)
+    cols'    = named "cols" $ layoutHints $ deco $ multiCol [1,0] 0 (3/100) (1/2)
+    --cols'    = named "cols" $ layoutHints $ deco $ multiCol [1,0] 0 (3/100) (1/2)
     rows'    = named "rows" $ Mirror $ layoutHints $ deco $ multiCol [1] 0 (2/100) (4/7)
 --    rows'    = named "rows" $ layoutHints $ deco $ multiRow [1] 2 (3/100) (1/2)
     twopane' = named "two"  $ layoutHints $ TwoPane (3/100) (3/7)

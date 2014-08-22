@@ -302,6 +302,8 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   function see { IFS="|";transmission-remote -l |cut -c58-|grep -iE "^$*"|sed 's/ \+/\t/'; }
 
   function moviemerge { ffmpeg -f concat -i <(for F in ${@:2}; do echo "file $PWD/$F"; done ) -c copy "$1"; }
+  function to { echo -e "Moving: ${@:2}\nTarget: $1\nLink from: /media/incoming"; if test -d "$1" ; then mv "$2" "$1" -v ; ln "$1/$2" /media/incoming -sv; fi; }
+  function mto { echo -e "Moving: ${@:2}\nTarget: $1\nLink from: /media/incoming"; if test -d "$1" ; then for F in ${@:2}; do mv "$F" "$1" -v ; ln "$1/$F" /media/incoming -sv; done; fi; }
   
   echo "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
