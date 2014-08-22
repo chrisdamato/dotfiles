@@ -1,6 +1,6 @@
 #!/bin/bash
 set	-x
-yum	install	pcmanfm	rxvt-unicode	volumeicon	xfce4-volumed	stalonetray gmrun scrot
+yum	install	pcmanfm	rxvt-unicode	volumeicon	xfce4-volumed	stalonetray gmrun scrot geeqie
 
 # cat	<<-	'EOF'	>>	~/.Xresources
 # 	URxvt.colorIT:	#87af5f
