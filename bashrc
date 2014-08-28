@@ -63,7 +63,7 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
   done
 
   # Aliases and functions
-  alias ls="ls --color=always "
+  alias ls="ls -LC --color=always "
   alias ll="ls -lArt"
   alias lss='ls -rhS'
   alias lst='ls -rht'

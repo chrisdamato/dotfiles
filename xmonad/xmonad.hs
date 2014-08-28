@@ -84,12 +84,13 @@ getSortByIndex' = mkWsSort getWsCompare'
 -- xdotool, wmctrl
 
 myTerminal = "gnome-terminal"
+myTerminalClass = "Gnome-terminal"
+-- myTerminalClass = "URxvt"
 -- myTerminal = "mate-terminal"
 -- myTerminal = "xfce4-terminal"
 -- myTerminal = "urxvt256c"
 -- myTerminal = "urxvt256c  +sb -fg white -bg black -fn  \"xft:Droid Sans Mono:pixelsize=13:antialias=true\" +ptab -letsp -1 -fade 30 -keysym.Home \"\\033[1~\" -keysym.End \"\\033[4~\" -keysym.C-Left \"\\033[1;5D\" -keysym.C-Right \"\\033[1;5C\" -tn xterm-color -sl 65535"
 -- window class, use `M-c i` to inspect the window class name
-myTerminalClass = "URxvt"
 myBorderWidth   = 2
 myModMask       = mod4Mask
 
