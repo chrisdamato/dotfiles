@@ -7,11 +7,11 @@ declare LEFT # time until next warning
 declare MSG
 declare SLEEP
 
-declare VOLUME=40  # volume of speech 0-100
+declare VOLUME=100  # volume of speech 0-100
 declare LOOP=0      # number of times to repeat end message, 0=forever
 
-(( $2 )) & VOLUME=$2
-(( $3 )) & LOOP=$3
+(( $2 )) && VOLUME=$2
+(( $3 )) && LOOP=$3
 
 function repeat () { 
   mplayer -volume $VOLUME -loop $1 \
