@@ -2,6 +2,7 @@
     {
         "link": {
  	    "~/.bashrc": "bashrc"
+ 	    "~/.dir_colors": ".dir_colors"
             ,"~/.Xresources": "Xresources"
             ,"~/.xmonad/xmonad.hs": "xmonad/xmonad.hs"
             ,"~/.xmonad/xmobar.hs": "xmonad/xmobar.hs"

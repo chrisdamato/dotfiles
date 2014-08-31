@@ -1,0 +1,41 @@
+#!/bin/bash
+set -e
+declare LEFT # time until next warning
+declare MSG
+declare SLEEP
+
+declare -r VOLUME=40  # volume of speech 0-100
+declare -r LOOP=0      # number of times to repeat end message, 0=forever
+
+function repeat () { 
+  mplayer -volume $VOLUME -loop $1 \
+    -quiet -nolirc -prefer-ipv4 \
+    "http://translate.google.com/translate_tts?tl=en&q=${@:2}" \
+    > /dev/null; # only show stderr from mplayer
+}
+
+function say () { repeat 1 "$*"; }
+
+LEFT=$(( $1 ))
+
+while (( LEFT > 0 )); do
+
+  MSG="$LEFT minute"
+  (( LEFT > 1 )) && MSG="${MSG}s"
+  MSG="${MSG} left"
+  echo $MSG
+  say "$MSG" > /dev/null
+  SLEEP=$(( $LEFT ))
+  LEFT=$(( 2 * LEFT / 3))
+  echo "Next warning at $LEFT minutes left"
+  SLEEP=$(( SLEEP - LEFT ))
+  echo "Sleeping for $SLEEP minutes"
+  sleep $(( SLEEP * 60 ))
+
+done
+
+while (( 1 )); do
+
+  repeat $LOOP "Time to go upstairs!" > /dev/null
+
+done 

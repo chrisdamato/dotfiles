@@ -54,7 +54,7 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
 
 
   # Set the initial path
-  export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$HOME/dotfiles
 
   for script in /etc/profile.d/*.sh ; do
           if [ -r $script ] ; then
@@ -255,7 +255,7 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   # Press <escape> then <space> to sudo !!
   bind '"\e\ ":"\C-k \C-usudo !!\n"'
 
-  function say() { mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en&q=$*"; }
+  function say() { mplayer -volume 100 "http://translate.google.com/translate_tts?tl=en&q=$*"; }
   function ff() { find . -type f -iname "*$1*" -printf "\"%p\"\n"; }
   function fd() { find . -type d -iname "*$1*" -printf "\"%p\"\n"; }
   alias d='cd ~/Dropbox/Documents/divorce'
