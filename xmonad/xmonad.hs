@@ -229,8 +229,8 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-`", namedScratchpadAction pads "term") -- quake terminal
 
     -- prompt
-    --, ("M-p g", windowPromptGoto myWaitSP) -- window go prompt
-    --, ("M-p b", windowPromptBring myWaitSP) -- window bring prompt
+    , ("M-w g", windowPromptGoto myWaitSP) -- window go prompt
+    , ("M-w b", windowPromptBring myWaitSP) -- window bring prompt
     , ("M-S-<Backspace>", AL.launchApp mySP { defaultText = "~" } "pcmanfm") -- directory prompt
     --, ("M-g", runOrRaise "~/.xmonad/bin/window-go.sh" (resource =? "WindowGo" <&&> className =? "Gpicker")) -- window go
     --, ("M-b", runOrRaise "~/.xmonad/bin/window-bring.sh" (resource =? "WindowBring" <&&> className =? "Gpicker")) -- window bring
@@ -325,8 +325,8 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-s", sendMessage (Toggle SIDEBAR)) -- toggle sidebar
     , ("M-d", sendMessage (Toggle MAG)) -- toggle mag
     , ("M-<Escape>", sendMessage (Toggle RFULL)) -- Full without panel, border
-    --, ("M-t", withFocused $ windows . W.sink) -- sink focused window
-    --, ("M-S-t", sinkAll) -- sink all windows
+    , ("M-t", withFocused $ windows . W.sink) -- sink focused window
+    , ("M-S-t", sinkAll) -- sink all windows
     , ("M-,", sendMessage (IncMasterN (-1))) -- decrease master windows number
     , ("M-.", sendMessage (IncMasterN 1)) -- increase master windows number
 
