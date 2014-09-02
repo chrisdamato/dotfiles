@@ -1,6 +1,6 @@
 #!/bin/bash
 # damato 2014
-(( $1 )) || { echo "usage: minutes_left MINUTES [ VOLUME [ LOOP [ SKIP-SLEEP ]]]"; exit; }
+(( $1 )) || { echo "usage: minutes-left MINUTES [ VOLUME [ LOOP [ SKIP-SLEEP ]]]"; exit; }
 
 set -e
 declare LEFT # time until next warning

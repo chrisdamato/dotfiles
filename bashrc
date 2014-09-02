@@ -63,7 +63,7 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
   done
 
   # Aliases and functions
-  alias ls="ls -LC --color=always "
+  alias ls="ls -FC --color=always "
   alias ll="ls -lArt"
   alias lss='ls -rhS'
   alias lst='ls -rht'
@@ -100,7 +100,7 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
   function sshh ()  { echo -en "$H\t"; OUT=$( ssh -o ConnectTimeout=2 -o batchmode=yes "$H" eval ${@:1} ); [ "$OUT" ] && echo "$OUT" || echo -; }
 
   function bu() { cp $1 $1-$(date +%Y-%m-%d-%H-%M) -vba ;} # backup a file with a timestamp
-  function mu() { mv $1 $1-$(date +%Y-%m-%d-%H-%M) -v ;} # rename a file with a timestamp
+#  function mu() { mv $1 $1-$(date +%Y-%m-%d-%H-%M) -v ;} # rename a file with a timestamp
 
   # indicate we have completed profile-type settings for next time
   export _BASHRC=1:$_BASHRC
@@ -305,6 +305,10 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   function to { echo -e "Moving: ${@:2}\nTarget: $1\nLink from: /media/incoming"; if test -d "$1" ; then mv "$2" "$1" -v ; ln "$1/$2" /media/incoming -sv; fi; }
   function mto { echo -e "Moving: ${@:2}\nTarget: $1\nLink from: /media/incoming"; if test -d "$1" ; then for F in ${@:2}; do mv "$F" "$1" -v ; ln "$1/$F" /media/incoming -sv; done; fi; }
   
+  alias yuma="yum --enablerepo=\*"
+  alias yyuma="yum -y --enablerepo=\*"
+  alias yyum="yum -y"
+
   echo "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
   HELLO="$( lsb_release -ds | fmt )"
