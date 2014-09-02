@@ -54,7 +54,7 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
 
 
   # Set the initial path
-  export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+  export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$HOME/dotfiles
 
   for script in /etc/profile.d/*.sh ; do
           if [ -r $script ] ; then
@@ -63,7 +63,7 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
   done
 
   # Aliases and functions
-  alias ls="ls --color=always "
+  alias ls="ls -FC --color=always "
   alias ll="ls -lArt"
   alias lss='ls -rhS'
   alias lst='ls -rht'
@@ -100,7 +100,7 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
   function sshh ()  { echo -en "$H\t"; OUT=$( ssh -o ConnectTimeout=2 -o batchmode=yes "$H" eval ${@:1} ); [ "$OUT" ] && echo "$OUT" || echo -; }
 
   function bu() { cp $1 $1-$(date +%Y-%m-%d-%H-%M) -vba ;} # backup a file with a timestamp
-  function mu() { mv $1 $1-$(date +%Y-%m-%d-%H-%M) -v ;} # rename a file with a timestamp
+#  function mu() { mv $1 $1-$(date +%Y-%m-%d-%H-%M) -v ;} # rename a file with a timestamp
 
   # indicate we have completed profile-type settings for next time
   export _BASHRC=1:$_BASHRC
@@ -255,7 +255,7 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   # Press <escape> then <space> to sudo !!
   bind '"\e\ ":"\C-k \C-usudo !!\n"'
 
-  function say() { mplayer -really-quiet "http://translate.google.com/translate_tts?tl=en&q=$*"; }
+  function say() { mplayer -volume 100 "http://translate.google.com/translate_tts?tl=en&q=$*"; }
   function ff() { find . -type f -iname "*$1*" -printf "\"%p\"\n"; }
   function fd() { find . -type d -iname "*$1*" -printf "\"%p\"\n"; }
   alias d='cd ~/Dropbox/Documents/divorce'
@@ -305,6 +305,10 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   function to { echo -e "Moving: ${@:2}\nTarget: $1\nLink from: /media/incoming"; if test -d "$1" ; then mv "$2" "$1" -v ; ln "$1/$2" /media/incoming -sv; fi; }
   function mto { echo -e "Moving: ${@:2}\nTarget: $1\nLink from: /media/incoming"; if test -d "$1" ; then for F in ${@:2}; do mv "$F" "$1" -v ; ln "$1/$F" /media/incoming -sv; done; fi; }
   
+  alias yuma="yum --enablerepo=\*"
+  alias yyuma="yum -y --enablerepo=\*"
+  alias yyum="yum -y"
+
   echo "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
   HELLO="$( lsb_release -ds | fmt )"
