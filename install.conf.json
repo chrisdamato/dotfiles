@@ -2,13 +2,9 @@
     {
         "link": {
  	    "~/.bashrc": "bashrc"
- 	    "~/.dir_colors": ".dir_colors"
+ 	    ,"~/.dir_colors": ".dir_colors"
             ,"~/.Xresources": "Xresources"
-            ,"~/.xmonad/xmonad.hs": "xmonad/xmonad.hs"
-            ,"~/.xmonad/xmobar.hs": "xmonad/xmobar.hs"
-            ,"~/.xmonad/xmobar2.hs": "xmonad/xmobar2.hs"
-            ,"~/.xmonad/session": "xmonad/session"
-            ,"~/.xmonad/dependencies": "xmonad/dependencies"
+            ,"~/.xmonad": "xmonad"
             ,"~/.config/xfce4/terminal/terminalrc": "terminalrc"
          }
     },
