@@ -17,14 +17,17 @@ xsetroot -solid '#000'&
 for P in stalonetray xfce4-volumed volumeicon nm-applet xscreensaver dropbox pcmanfm xfce4-power-manager; do pkill -e $P; done
 
 # icon tray
-stalonetray -p -i 18 -geometry 12x1 --grow-gravity E --kludges force_icons_size &
+
+# not sure if --dockapp-mode does anything useful, just testing
+stalonetray --parent-bg --icon-size 18 --geometry 12x1 --grow-gravity E --kludges force_icons_size,fix_window_pos --config /dev/null --slot-size 20 --dockapp-mode simple &
+# 2014-09 # stalonetray -p -i 18 -geometry 12x1 --grow-gravity E --kludges force_icons_size &
 
 # enables XF86 media buttons for volume/mute
 # use config from .xmonad directory
-mkdir -p $HOME/.config/volumeicon/
-ln $HOME/.xmonad/volumeicon $HOME/.config/volumeicon/volumeicon -sTfv
 # taskbar volume icon
-volumeicon &
+
+# using chris's custom volumeicon executable from bin
+~/.xmonad/bin/volumeicon --config="$HOME/.xmonad/volumeicon.conf"
 
 # taskbar icon with profile selection
 nm-applet &
