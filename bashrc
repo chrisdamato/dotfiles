@@ -256,8 +256,8 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   bind '"\e\ ":"\C-k \C-usudo !!\n"'
 
   function say() { mplayer -volume 100 "http://translate.google.com/translate_tts?tl=en&q=$*"; }
-  function ff() { find . -type f -iname "*$1*" -printf "\"%p\"\n"; }
-  function fd() { find . -type d -iname "*$1*" -printf "\"%p\"\n"; }
+  function ff() { find . -type f -iname "*$1*" -printf "%AY-%Am-%Ad-%AI-%AM\t%k\t\"%p\"\n"; }
+  function fd() { find . -type d -iname "*$1*" -printf "\"%f\"\n"; }
   alias d='cd ~/Dropbox/Documents/divorce'
 
 # winetricks support
