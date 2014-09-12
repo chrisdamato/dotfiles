@@ -27,7 +27,7 @@ stalonetray --parent-bg --icon-size 18 --geometry 12x1 --grow-gravity E --kludge
 # taskbar volume icon
 
 # using chris's custom volumeicon executable from bin
-~/.xmonad/bin/volumeicon --config="$HOME/.xmonad/volumeicon.conf"
+~/.xmonad/bin/volumeicon --config="$HOME/.xmonad/volumeicon.conf" &
 
 # taskbar icon with profile selection
 nm-applet &

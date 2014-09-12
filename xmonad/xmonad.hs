@@ -564,7 +564,11 @@ exitHook = do
 --
 
 main = do
-  spawn "~/.xmonad/session > ~/.xmonad/session.log"
+  
+  --  damato 2014-09-09 from sparge
+  --  looks like ~/.xmonad/session is called from /usr/bin/xmonad-start
+  --  spawn "~/.xmonad/session > ~/.xmonad/session.log"
+  --
   wsBar1 <- spawnPipe "/usr/bin/xmobar -x 0 ~/.xmonad/xmobar.hs"
   wsBar2 <- spawnPipe "/usr/bin/xmobar -x 1 ~/.xmonad/xmobar2.hs"
 
