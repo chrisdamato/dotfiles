@@ -19,8 +19,8 @@ for P in stalonetray xfce4-volumed volumeicon nm-applet xscreensaver dropbox pcm
 # icon tray
 
 # not sure if --dockapp-mode does anything useful, just testing
-stalonetray --parent-bg --icon-size 18 --geometry 12x1 --grow-gravity E --kludges force_icons_size,fix_window_pos --config /dev/null --slot-size 20 --dockapp-mode simple &
-# 2014-09 # stalonetray -p -i 18 -geometry 12x1 --grow-gravity E --kludges force_icons_size &
+# stalonetray --parent-bg --icon-size 18 --geometry 12x1 --grow-gravity E --kludges force_icons_size,fix_window_pos --config /dev/null --slot-size 20 --dockapp-mode simple &
+stalonetray -p -i 18 -geometry 12x1 --grow-gravity E --kludges force_icons_size &
 
 # enables XF86 media buttons for volume/mute
 # use config from .xmonad directory
