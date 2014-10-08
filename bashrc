@@ -240,7 +240,7 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   function sshpkey() { cat ~/.ssh/*pub | ssh $1 "cat - >> ~/.ssh/authorized_keys"; }
   alias pkey='echo $K >> ~/.ssh/authorized_keys'
 
-  export LESS=-R
+  export LESS="-R -A"
 
   # suppress the hostname output when rsync
   export RSYNC_RSH='ssh -o PermitLocalCommand=no'
