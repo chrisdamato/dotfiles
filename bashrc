@@ -324,3 +324,4 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
 
 
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
