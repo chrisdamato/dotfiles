@@ -1,0 +1,2 @@
+nohup rdesktop -K -g 1800x980 -u "administrator@bvpd" -p "paige1127" -K -r clipboard:PRIMARYCLIPBOARD,disk:home=/home $1 &
+

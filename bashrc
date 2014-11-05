@@ -324,3 +324,4 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
 
 
 
+alias r=\'	 X=1800;O=eDP1;Y=$(( $X * 9 / 16 ));M=( $(cvt -r $X $Y|sed -nr 's/^Modeline (.*)$/\1/p') );xrandr --rmmode $M 2>/dev/null; xrandr --verbose --output $O --newmode ${M[@]}; xrandr --verbose --addmode $O $M; xrandr --verbose --output $O --mode $M #resolution settings\'

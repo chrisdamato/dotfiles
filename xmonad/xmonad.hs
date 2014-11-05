@@ -105,7 +105,7 @@ myActiveBorderColor  = "#444444"
 
 -- shell prompt theme
 mySP = defaultXPConfig
-       { font = "xft:" ++ myMonoFont ++ ":pixelsize=16"
+       { font = "xft:" ++ myMonoFont ++ ":pixelsize=32"
        , bgColor           = "#002b36"
        , fgColor           = "#93a1a1"
        , bgHLight          = "#93a1a1"
@@ -113,7 +113,7 @@ mySP = defaultXPConfig
        , borderColor       = "#2aa198"
        , promptBorderWidth = 1
 
-       , height            = 22
+       , height            = 60
        , defaultText       = []
        }
 
@@ -202,8 +202,8 @@ wsPP = defaultPP
 
 myTheme :: Theme
 myTheme = defaultTheme
-          { fontName = "xft:" ++ myFont ++ ":pixelsize=14"
-          , decoHeight = 20
+          { fontName = "xft:" ++ myFont ++ ":pixelsize=16"
+          , decoHeight = 16
           , decoWidth = 400
           , activeColor = myFocusedBorderColor
           , inactiveColor = "#222222"
@@ -230,7 +230,8 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-`", namedScratchpadAction pads "term") -- quake terminal
 
     -- prompt
-    , ("M-w g", windowPromptGoto myWaitSP) -- window go prompt
+    , ("M-w g", windowPromptGoto mySP) -- window go prompt
+--    , ("M-w g", windowPromptGoto myWaitSP) -- window go prompt
     , ("M-w b", windowPromptBring myWaitSP) -- window bring prompt
     , ("M-S-<Backspace>", AL.launchApp mySP { defaultText = "~" } "pcmanfm") -- directory prompt
     --, ("M-g", runOrRaise "~/.xmonad/bin/window-go.sh" (resource =? "WindowGo" <&&> className =? "Gpicker")) -- window go
@@ -401,15 +402,15 @@ myKeys =  \conf -> mkKeymap conf $
 dmenuXinerama :: [String] -> X String
 dmenuXinerama opts = do
     io $ runProcessWithInput "dmenu" [ "-fn"
-                                     , (myFont ++ "-14")
+                                     , "-*-terminus-*-r-*-*-32-*"
                                      , "-nb"
-                                     , "#1e2320" 
+                                     , "yellow"
                                      , "-nf" 
-                                     , "#acbc90" 
+                                     , "#000000" 
                                      , "-sf" 
-                                     , "#0f1a0f"
+                                     , "#ffffff"
                                      , "-sb"
-                                     , "#f0dfaf"
+                                     , "#000000"
                                      ] (unlines opts)
 
 withWorkspace' :: (String -> X ()) -> X ()
@@ -461,6 +462,7 @@ myLayout = configurableNavigation (navigateColor myActiveBorderColor)
            $ mkToggle (single FULL)
            $ (onWorkspace "8.gimp" $ named "gimp" $ withIM (2/11) (Role "gimp-toolbox") $ big')
            $ mkToggle (single SIDEBAR) 
+	   $ smartBorders
            $ layouts
   where
     layouts  = cols' ||| rows' ||| twopane' ||| tabs' ||| grid' ||| big'
