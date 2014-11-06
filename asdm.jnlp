@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<jnlp spec="1.0+" codebase="https://10.18.3.5/admin/public" href="https://10.18.3.5/admin/public/asdm.jnlp">
+  <information>
+    <title>ASDM on 10.18.3.5</title>
+    <vendor>Cisco Systems, Inc.</vendor>
+    <homepage href="http://www.cisco.com/go/asdm"/>
+    <description>ASDM on 10.18.3.5</description>
+    <description kind="short">ASDM on 10.18.3.5</description>
+    <description kind="tooltip">ASDM on 10.18.3.5</description>
+    <icon href="asdm32.gif"/>
+    <offline-allowed/>
+    <shortcut>
+      <desktop/>
+      <menu submenu="Cisco ASDM"/>
+    </shortcut>
+  </information>
+
+  <security>
+    <all-permissions/>
+  </security>
+
+  <resources>
+    <j2se version="1.6+" initial-heap-size="64m" max-heap-size="512m"
+        java-vm-args="-XX:MaxNewSize=1024k"/>
+    <jar href="dm-launcher.jar" main="true" download="eager"/>
+    <jar href="lzma.jar" download="eager"/>
+    <jar href="jploader.jar" download="eager"/>
+    <jar href="retroweaver-rt-2.0.jar" download="eager"/>
+    <property name="http.agent" value="ASDM/"/>
+  </resources>
+
+  <application-desc main-class="com.cisco.launcher.Launcher">
+      <argument>/webstart</argument>
+      <argument>10.18.3.5</argument>
+  </application-desc>
+
+</jnlp>
