@@ -27,7 +27,10 @@ stalonetray -p -i 18 -geometry 12x1 --grow-gravity E --kludges force_icons_size 
 # taskbar volume icon
 
 # using chris's custom volumeicon executable from bin
-~/.xmonad/bin/volumeicon --config="$HOME/.xmonad/volumeicon.conf" &
+# ~/.xmonad/bin/volumeicon --config="$HOME/.xmonad/volumeicon.conf" &
+# nevermind. symlinked by dotfiles now
+volumeicon &
+
 
 # taskbar icon with profile selection
 nm-applet &

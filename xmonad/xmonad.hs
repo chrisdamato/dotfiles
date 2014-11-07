@@ -461,6 +461,7 @@ myLayout = configurableNavigation (navigateColor myActiveBorderColor)
            $ mkToggle (single FULL)
            $ (onWorkspace "8.gimp" $ named "gimp" $ withIM (2/11) (Role "gimp-toolbox") $ big')
            $ mkToggle (single SIDEBAR) 
+           $ smartBorders
            $ layouts
   where
     layouts  = cols' ||| rows' ||| twopane' ||| tabs' ||| grid' ||| big'
