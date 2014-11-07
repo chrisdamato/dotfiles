@@ -2,7 +2,6 @@
     {
         "link": {
  	    "~/.bashrc": "bashrc"
-	    ,"~/.config/volumeicon/volumeicon": "xmonad/volumeicon.conf"
             ,"~/.stalonetrayrc":"xmonad/stalonetray.conf"
  	    ,"~/.dir_colors": ".dir_colors"
             ,"~/.Xresources": "Xresources"

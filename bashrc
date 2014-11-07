@@ -209,7 +209,7 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   fi
 
   if [[ $EUID == 0 ]] ; then
-    export PS1="\[\e[0m\w\n$RED\u$NORMAL@\[$(pscolor $HOSTNAME)\]\h$NORMAL $RED#$NORMAL "
+    export PS1="\n\w\n\[\e[0m\w\n$RED\u$NORMAL@\[$(pscolor $HOSTNAME)\]\h$NORMAL $RED#$NORMAL "
   else
     export PS1="\[\e[0m\w\n\[$( pscolor $USER )\]\u$NORMAL@\[$(pscolor $HOSTNAME)\]\h$NORMAL $GREEN\$$NORMAL "
   fi
@@ -240,7 +240,7 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   function sshpkey() { cat ~/.ssh/*pub | ssh $1 "cat - >> ~/.ssh/authorized_keys"; }
   alias pkey='echo $K >> ~/.ssh/authorized_keys'
 
-  export LESS=-R
+  export LESS="-R -A"
 
   # suppress the hostname output when rsync
   export RSYNC_RSH='ssh -o PermitLocalCommand=no'
@@ -256,8 +256,8 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   bind '"\e\ ":"\C-k \C-usudo !!\n"'
 
   function say() { mplayer -volume 100 "http://translate.google.com/translate_tts?tl=en&q=$*"; }
-  function ff() { find . -type f -iname "*$1*" -printf "\"%p\"\n"; }
-  function fd() { find . -type d -iname "*$1*" -printf "\"%p\"\n"; }
+  function ff() { find . -type f -iname "*$1*" -printf "%AY-%Am-%Ad-%AI-%AM\t%k\t\"%p\"\n"; }
+  function fd() { find . -type d -iname "*$1*" -printf "\"%f\"\n"; }
   alias d='cd ~/Dropbox/Documents/divorce'
 
 # winetricks support
@@ -324,3 +324,4 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
 
 
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

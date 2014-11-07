@@ -20,7 +20,7 @@ for P in stalonetray xfce4-volumed volumeicon nm-applet xscreensaver dropbox pcm
 
 # not sure if --dockapp-mode does anything useful, just testing
 # stalonetray --parent-bg --icon-size 18 --geometry 12x1 --grow-gravity E --kludges force_icons_size,fix_window_pos --config /dev/null --slot-size 20 --dockapp-mode simple &
-stalonetray -p -i 18 -geometry 12x1 --grow-gravity E --kludges force_icons_size &
+stalonetray -p -i 32 -geometry 12x1 --grow-gravity E --kludges force_icons_size &
 
 # enables XF86 media buttons for volume/mute
 # use config from .xmonad directory
@@ -51,3 +51,4 @@ xfce4-power-manager &
 setxkbmap -option caps:none &
 
 set -x
+X=1800;O=eDP1;Y=$(( $X * 9 / 16 ));M=( $(cvt -r $X $Y|sed -nr 's/^Modeline (.*)$/\1/p') );xrandr --rmmode $M 2>/dev/null; xrandr --verbose --output $O --newmode ${M[@]}; xrandr --verbose --addmode $O $M; xrandr --verbose --output $O --mode $M #resolution settings
