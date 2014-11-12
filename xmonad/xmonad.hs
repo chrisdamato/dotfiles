@@ -29,6 +29,7 @@ import qualified XMonad.Actions.FlexibleResize as Flex
 --import XMonad.Layout hiding ( (|||) )
 import XMonad.Layout.LayoutCombinators
 import XMonad.Layout.DwmStyle
+import XMonad.Layout.SimpleDecoration
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.NoBorders
 import XMonad.Layout.Named
@@ -404,6 +405,10 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-S-<D>", shiftAndView' Next) -- shift to next workspace and follow
     , ("M-S-<U>,", shiftAndView' Prev) -- shift to prev workspace and follow
     ]
+    ++
+    -- chris power control
+    [ ("M-<F4>", spawn "sudo pm-suspend-hybrid")
+    ]
     where
       getSortByIndexNoSP =
           fmap (.namedScratchpadFilterOutWorkspace) getSortByIndex'
@@ -475,9 +480,10 @@ myLayout = configurableNavigation (navigateColor myActiveBorderColor)
            $ mkToggle (single FULL)
            $ (onWorkspace "8.gimp" $ named "gimp" $ withIM (2/11) (Role "gimp-toolbox") $ big')
            $ mkToggle (single SIDEBAR) 
+           $ smartBorders -- turns off border for appropriate windows
            $ layouts
   where
-    layouts  = cols' ||| rows' ||| twopane' ||| tabs' ||| grid' ||| big'
+    layouts  = cols' ||| rows' ||| twopane' ||| tabs' ||| grid' ||| big' 
     cols'    = named "cols" $ layoutHints $ deco $ multiCol [1,0] 0 (3/100) (1/2)
     --cols'    = named "cols" $ layoutHints $ deco $ multiCol [1,0] 0 (3/100) (1/2)
     rows'    = named "rows" $ Mirror $ layoutHints $ deco $ multiCol [1] 0 (2/100) (4/7)

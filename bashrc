@@ -209,7 +209,7 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   fi
 
   if [[ $EUID == 0 ]] ; then
-    export PS1="\[\e[0m\w\n$RED\u$NORMAL@\[$(pscolor $HOSTNAME)\]\h$NORMAL $RED#$NORMAL "
+    export PS1="\n\w\n\[\e[0m\w\n$RED\u$NORMAL@\[$(pscolor $HOSTNAME)\]\h$NORMAL $RED#$NORMAL "
   else
     export PS1="\[\e[0m\w\n\[$( pscolor $USER )\]\u$NORMAL@\[$(pscolor $HOSTNAME)\]\h$NORMAL $GREEN\$$NORMAL "
   fi
@@ -330,3 +330,4 @@ export AWT_TOOLKIT=MToolkit
 
 
 
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash

@@ -50,13 +50,13 @@ while true; do
 	-m|--minutes)
 	    LEFT=$2; shift;;
         --)
-            LEFT=$2; break;;
+            break;;
+#            LEFT=$2; break;;
     esac
     shift
 done
 
-(( LEFT > 0 )) || { usage; exit 1; }
-
+function dump_if_debug () {
 [ $DEBUG ] && cat <<EOF | column -s\& -t
 
 VOLUME & $VOLUME
@@ -65,7 +65,11 @@ ALARM & $ALARM
 MINUTES & $LEFT
 DEBUG & $DEBUG
 EOF
+}
 
+dump_if_debug
+
+(( LEFT > 0 )) || { usage; exit 1; }
 
 #(( $1 )) || { echo "usage: minutes-left MINUTES [ VOLUME [ LOOP [ SKIP-SLEEP ]]]"; exit; }
 
@@ -89,7 +93,7 @@ while (( LEFT > 0 )); do
 
   MSG="$LEFT minute"
   (( LEFT > 1 )) && MSG="${MSG}s"
-  MSG="${MSG} left"
+  MSG="${MSG} left until $ALARM"
   echo $MSG
   say "$MSG" > /dev/null
   SLEEP=$(( $LEFT ))
@@ -97,12 +101,14 @@ while (( LEFT > 0 )); do
   echo "Next warning at $LEFT minutes left"
   SLEEP=$(( SLEEP - LEFT ))
   echo "Sleeping for $SLEEP minutes"
-  (( $DEBUG )) || sleep $(( SLEEP * 60 ))
+  dump_if_debug
+  sleep $(( SLEEP * 60 ))
 
 done
 
 while (( 1 )); do
 
+  dump_if_debug
   repeat $LOOP "$ALARM" > /dev/null
 
 done 
