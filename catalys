@@ -1,2 +1,6 @@
-rdesktop 10.18.3.251 -K -u administrator -g 1900x1200 -p P@ssw0rd! # Phone system voice mail Avaya Voice Mail Pro server 18.18.3.251 name:catalys-umgbwjo
+#!/bin/bash
+GEOMETRY="$(xrandr --current|sed -nr 's/^\w+ connected (\w+).*$/\1/p'|head -n1)"
+echo $GEOMETRY
+#rdesktop 10.18.3.251 -K -u administrator -g workarea -p P@ssw0rd! # Phone system voice mail Avaya Voice Mail Pro server 18.18.3.251 name:catalys-umgbwjo
+rdesktop 10.18.3.251 -K -u administrator -g $GEOMETRY -p P@ssw0rd! # Phone system voice mail Avaya Voice Mail Pro server 18.18.3.251 name:catalys-umgbwjo
 

@@ -320,6 +320,12 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   # http://is.muni.cz/www/xsiska2/2014/08/01/get-faster-in-bash.html
   bind space:magic-space
 
+# fuzzy history search	[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# xmonad javaws http://permalink.gmane.org/gmane.comp.lang.haskell.xmonad/978 
+export AWT_TOOLKIT=MToolkit
+
+  alias word='nohup env WINEARCH=win32 WINEPREFIX=$HOME/office wine "/home/damato/office/drive_c/Program Files/Microsoft Office/Office14/WINWORD.EXE" > $HOME/office.out &'
   fi
 
 

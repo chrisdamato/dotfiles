@@ -216,11 +216,25 @@ myTheme = defaultTheme
           , urgentTextColor = "#dc322f"
           }
 
+-- myScratchTerminal = "xfce4-terminal"
+myScratchTerminal = "urxvt256c  +sb -fg white -bg black -fn  \"xft:Droid Sans Mono:pixelsize=13:antialias=true\" +ptab -letsp -1 -fade 30 -keysym.Home \"\\033[1~\" -keysym.End \"\\033[4~\" -keysym.C-Left \"\\033[1;5D\" -keysym.C-Right \"\\033[1;5C\" -tn xterm-color -sl 65535"
+myScratchTerminalClass = "urxvt256c"
+
 pads = [ NS "term"
-         (myTerminal ++ " -name scratchpad")
-         (resource =? "scratchpad" <&&> className =? myTerminalClass)
+         --(myScratchTerminal ++ " --name scratchpad")
+         -- gnome-term or xfce4 do not use --name properly so...
+         (myScratchTerminal )
+         (resource =? "scratchpad" <&&> className =? myScratchTerminalClass)
+--          (className =? myScratchTerminalClass)
          (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4)
        ]
+
+
+--pads = [ NS "term" 
+--          "urxvt88c -name scratchpad" 
+--          (resource =? "scratchpad" <&&> className =? "URxvt") 
+--          (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4)
+--       ]
 
 -- unused char
 -- a, x, y, ', m
@@ -230,8 +244,8 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-`", namedScratchpadAction pads "term") -- quake terminal
 
     -- prompt
-    , ("M-w g", windowPromptGoto myWaitSP) -- window go prompt
-    , ("M-w b", windowPromptBring myWaitSP) -- window bring prompt
+    , ("M-c g", windowPromptGoto myWaitSP) -- window go prompt
+    , ("M-c b", windowPromptBring myWaitSP) -- window bring prompt
     , ("M-S-<Backspace>", AL.launchApp mySP { defaultText = "~" } "pcmanfm") -- directory prompt
     --, ("M-g", runOrRaise "~/.xmonad/bin/window-go.sh" (resource =? "WindowGo" <&&> className =? "Gpicker")) -- window go
     --, ("M-b", runOrRaise "~/.xmonad/bin/window-bring.sh" (resource =? "WindowBring" <&&> className =? "Gpicker")) -- window bring
@@ -342,7 +356,7 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-n", withWorkspace' (windows . W.greedyView)) -- workspace prompt gready
     --, ("M-m", withWorkspace' (windows . W.view)) -- workspace prompt
     , ("M-S-n", withWorkspace' (windows . W.shift)) -- workspace shift prompt
-    --, ("M-C-n", withWorkspace' (windows . copy)) -- workspace copy prompt
+    , ("M-C-n", withWorkspace' (windows . copy)) -- workspace copy prompt
     , ("M-C-S-n", renameWorkspace mySP) -- rename workspace
     , ("M-C-S-<Backspace>", removeWorkspace) -- delete empty workspace
     , ("M-o", toggleWSNoSP) -- toggle recently visited workspaces
@@ -502,7 +516,7 @@ mySmartFloatManageHook = composeOne . concat $
   , [ role =? x -?> doFloat' | x <- rFloat ]
   , [ (isDialog -?> doFloat') ] ]
   where
-    cFloat  = [ "Zenity", "Stardict", "Update-manager", "Shutter"]
+    cFloat  = [ "Zenity", "Stardict", "Update-manager", "Shutter", myScratchTerminalClass ]
     rFloat  = [ "gimp-dock" ]
     ffCenter = [ "Manager", "Extension", "Download", "Dialog", "Browser", "Toplevel" ]
     unFloat = ask >>= doF . W.sink
