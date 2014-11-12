@@ -510,7 +510,7 @@ myFloatManageHook = composeOne . concat $
     , [ className =? x -?> doMaster | x <- masters ]
     ]
     where
-      cCenter = [ "Gmrun", "Gpicker", "Gcolor2" ]
+      cCenter = [ "Gmrun", "Gpicker", "Gcolor2", "xfreerdp", "rdesktop" ]
       masters = [ "Emacs" ]
       doCenterFloat' = doCenterFloat <+> doMaster
       doMaster = doF W.shiftMaster
@@ -538,6 +538,7 @@ myShiftManageHook = composeOne . concat $
                     , ("Skype", "9.im")
                     , ("Gimp", "8.gimp")
                     , ("Emacs", "3.emacs")
+                    , ("xfreerdp", "rdp-x")
 --                    , ("VirtualBox","7")
                     ]
       ]
