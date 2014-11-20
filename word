@@ -1,0 +1,22 @@
+ 4397  2014-10-20 08:43 ll
+ 4398  2014-10-20 08:43 goc
+ 4399  2014-10-20 08:43 cd
+ 4400  2014-10-20 08:43 winetricks -l
+ 4401  2014-10-20 08:43 winetricks 
+ 4402  2014-10-20 08:43 winetricks  --help
+ 4403  2014-10-20 08:43 winetricks  list
+ 4404  2014-10-20 08:44 history|grep WINEPREFIX
+ 4405  2014-10-20 08:44 export WINEARCH=win32; export WINEPREFIX=$HOME/office
+ 4406  2014-10-20 08:44 wine
+ 4407  2014-10-20 08:44 goc
+ 4408  2014-10-20 08:44 ll
+ 4409  2014-10-20 08:44 cd
+ 4410  2014-10-20 08:44 word
+ 4411  2014-10-20 08:44 goc
+ 4412  2014-10-20 08:44 export WINEARCH=win32; export WINEPREFIX=$HOME/office
+ 4413  2014-10-20 08:45 wine  "/home/damato/office/drive_c/Program Files/Microsoft Office/Office14/WINWORD.EXE" 
+ 4414  2014-10-20 08:45 pkill wine
+ 4415  2014-10-20 08:46 history|tail -n22>dotfiles/w
+ 4416  2014-10-20 08:46 cd
+ 4417  2014-10-20 08:46 unlink dotfiles/word
+ 4418  2014-10-20 08:46 history|tail -n22>dotfiles/word

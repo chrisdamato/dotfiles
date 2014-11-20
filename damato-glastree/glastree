@@ -1,0 +1,297 @@
+#!/usr/bin/perl
+
+#
+# glastree -- build dated, versioned tree of sourcedir, usually per diem
+#
+#  Jeremy Wohl (http://igmus.org/code)
+#  Public domain; no warranty, no responsibility, etc.
+#
+#  $Id: glastree,v 1.24 2003/01/27 00:26:26 jeremyw Exp $
+#
+
+require 5.002;
+
+use English;
+use Getopt::Long;
+use DirHandle;
+use File::Copy;
+use File::stat;
+use Cwd qw (getcwd);
+use Date::Calc qw (Today Add_Delta_Days);
+use strict;
+
+# some globals & option vars
+use vars qw/ $source $target $today $yesterday @prunedirs /;
+
+use vars qw/ $opt_usehourminute $opt_today $opt_yesterday /;
+use vars qw/ $opt_help $opt_version /;
+
+# damato
+use vars qw/ $opt_exclude_from @exclude /;
+
+my $version = "glastree v1.03 stable, http://igmus.org/code/\n";
+
+main ();
+
+sub main
+{
+    #
+    # handle options
+    #
+
+    GetOptions ('today=s', 'yesterday=s', 'version', 'help'
+      , 'exclude-from=s'
+      ); #, 'usehourminute!');
+    
+    if ($opt_version)  { print STDERR $version; exit 1; }
+
+    if ($opt_help or not @ARGV or scalar @ARGV != 2)
+    {
+	print STDERR "usage: glastree [options] sourcedir backupdir\n\n";
+	print STDERR "options:\n";
+	#print STDERR "  --usehourminute      Use hour/minute in directory names, suppress per diem\n";
+	print STDERR "  --today=path         Use path instead of today's date (YYYYMM/DD)\n";
+	print STDERR "  --yesterday=path     Use path instead of yesterday's date (YYYYMM/DD)\n";
+	print STDERR "  --version            Display version and exit\n";
+	print STDERR "  --help               Display this message and exit\n";
+	exit 1;
+    }
+
+    $source = $ARGV [0];
+    $target = $ARGV [1];
+
+    if (not defined $opt_today) {
+	$today = sprintf "%4d%02d/%02d", Today ();
+    } else {
+	$today = $opt_today;
+
+	die "fatal: manually set 'today' parameter is not valid YYYYMM/DD"
+	    if $today !~ m!^\d{6}/\d\d$!;
+    }
+
+    if (not defined $opt_yesterday) {
+	$yesterday = findyesterday ($target);
+    } else {
+	$yesterday = $opt_yesterday;
+
+	die "fatal: manually set 'yesterday' parameter is not valid YYYYMM/DD"
+	    if $yesterday !~ m!^\d{6}/\d\d$!;
+    }
+
+    #
+    # make basic checks
+    #
+    
+    my ($ym) = $today =~ /^(\d{6})/;
+
+    die "fatal: $target or $source does not exist"                if not -e $target or not -e $source;
+    die "fatal: $target or $source is not a directory"            if not -d $target or not -d $source;
+    die "fatal: you do not have read permission in $source"       if not -r $source;
+    die "fatal: you do not have write permission in $target"      if not -w $target;
+    die "fatal: you do not have write permission in $target/$ym"  if     -e "$target/$ym" and not -w "$target/$ym";
+    die "fatal: backupdir is the same as sourcedir"               if $target eq $source;
+
+    # damato
+    if (not defined $opt_exclude_from) {
+        @exclude = ()
+    } else {
+        open my $fh, '<', $opt_exclude_from 
+            or die "fatal: could not open exclude_from file '$opt_exclude_from'";
+        @exclude = <$fh>;
+    }
+
+    #
+    # get to it
+    #
+
+    rmkdir (cleanpath ("$target/$today"));
+
+    recurse ($source);
+}
+
+
+sub recurse
+{
+    my ($cwd) = shift;
+    my ($dir, @list, @dirs, @files);
+    my ($file, $num);
+    my ($now_stat, $yes_stat);
+
+
+    mkdirstat ("$target/$today", $cwd);
+    
+    return if ($dir = new DirHandle ($cwd)) == undef;
+
+    @list  = $dir->read;
+    @dirs  = grep { -d "$cwd/$_" and not -l "$cwd/$_" and $_ ne '.' and $_ ne '..' } @list;
+    @files = grep { -f "$cwd/$_" or      -l "$cwd/$_" } @list;
+    undef $dir;
+
+    # for all files in the source tree
+    #   if the file is a link, make the link
+    #   else if the file is a dir, make the dir
+    #   else if the file is a normal file
+    #     if yesterday does not exist or today is newer, copy the file
+    #     else hard link the file to yesterday
+    #   else: no logic to handle file type
+    # end
+
+	# damato exclude
+	foreach my $exp ( @exclude ) {
+		chomp ($exp);
+	 	print STDOUT "skip: ($exp) $_\n" for ( grep { ($cwd."/".$_) =~ /$exp/ } @files );
+		@files = grep { ($cwd."/".$_) !~ /$exp/ } @files ;
+		}
+
+	print STDOUT "\nDirectory: $cwd\n";
+
+    foreach $file (@files)
+    {
+
+
+	my $new_path       = "$cwd/$file";
+	my $today_path     = "$target/$today/$cwd/$file";
+	my $yesterday_path = "$target/$yesterday/$cwd/$file";
+
+	# if a regular file or symlink already exists in destination, assume we are continuing 
+	# an interrupted operation
+	if ( -f $today_path or -l $today_path ) #damato
+		{
+			print STDOUT "exists: $file\n";
+
+	}		
+
+	elsif (-l $new_path) {
+            print STDOUT "symlink: $file\n";
+	    symlink (readlink ($new_path), $today_path)
+		  or die "ERROR: Could not symlink \"$new_path\" to \"$today_path\""; #damato
+	}
+
+	elsif (-f $new_path)
+	{
+	    my $new_stat       = stat $new_path;
+	    my $yesterday_stat = stat $yesterday_path;
+
+	    if (not defined ($yesterday_stat)
+		or $new_stat->mtime != $yesterday_stat->mtime
+		or $new_stat->size  != $yesterday_stat->size)
+	    {
+		# original
+		print STDOUT "file: $file\n";
+		copystat ($new_path, $today_path, $new_stat)
+		  or die "ERROR: Could not copy \"$new_path\" to \"$today_path\""; #damato
+	    }
+	    else {
+		print STDOUT "link: $file\n";
+		link ($yesterday_path, $today_path)
+			  or die "ERROR: Could not hardlink \"$yesterday_path\" to \"$today_path\""; #damato
+	    }
+	}	    
+
+	else {
+	    print STDERR "warning: no logic to handle $cwd/$file; skipping\n";
+	}
+    }
+
+    foreach (@dirs) { recurse ("$cwd/$_"); }
+}
+
+
+#
+# Make path (recursively, if necessary) $prefix/$path, with $path owner/perms/mtime
+#  if $path == undef, we set perms as user-only
+#
+sub mkdirstat ($prefix, $path)
+{
+    my ($prefix, $path) = @_;
+    my ($piece, $olddir, $newdir, $fulldir, $stat);
+
+    foreach $piece (split '/', $path)
+    {
+	$olddir .= ($piece eq "" ? "/" : "") . $piece . "/";
+	$newdir .= $piece . "/";
+	$fulldir = "$prefix/$newdir";
+
+	if (not -e $fulldir)
+	{
+	    $stat = stat $olddir;
+
+	    mkdir $fulldir, 0555 or die "ERROR: mkdir $fulldir, 0555"; #damato or dies
+	    chown ($stat->uid, $stat->gid, $fulldir) if $EUID == 0 or die "ERROR: chown $fulldir";
+	    chmod ($stat->mode, $fulldir) or die "ERROR: chmod $fulldir";
+	    utime ($stat->mtime, $stat->mtime, $fulldir) or die "ERROR: utime $fulldir";
+	}
+    }
+}
+
+
+#
+# Copy $frompath to $topath, with $stat owner/perms/mtime
+#
+#
+sub copystat ($frompath, $topath, $stat)
+{
+    my ($frompath, $topath, $stat) = @_;
+
+    copy  ($frompath, $topath);
+    chown ($stat->uid, $stat->gid, $topath) if $EUID == 0;
+    chmod ($stat->mode, $topath);
+    utime ($stat->mtime, $stat->mtime, $topath);
+}
+
+
+#
+# Make all segments of $path that do not exist
+#
+#
+sub rmkdir ($path)
+{
+    my ($path) = shift;
+    my ($piece, $newdir);
+
+    $newdir = "/" if $path =~ m!^/!;
+
+    foreach $piece (split '/', $path) {
+	next if $piece eq "";
+	$newdir .= $piece . "/";
+	mkdir $newdir, 0755 if not -e $newdir;
+    }
+}
+
+
+#
+# Match most recent backup directory in the past sixty days, or yesterday if none
+#
+#
+sub findyesterday ($target)
+{
+    my ($yesterday, $span, $testdir);
+
+
+    $span = 1;
+
+    $yesterday = sprintf "%4d%02d/%02d", Add_Delta_Days (Today (), -1);
+
+    while ($span < 60)
+    {
+	$testdir = sprintf "%4d%02d/%02d", Add_Delta_Days (Today (), -$span);
+
+	if (-d "$target/$testdir")  { $yesterday = $testdir;  last; }
+
+	$span++;
+    }
+
+    return $yesterday;
+}
+
+
+sub cleanpath ($path)
+{
+    my ($path) = shift;
+
+    $path =~ s!^\./!!g;
+    $path =~ s!([^\.])\./!$1!g;
+    $path =~ s!//!/!g;
+
+    return $path;
+}

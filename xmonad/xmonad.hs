@@ -498,7 +498,7 @@ myLayout = configurableNavigation (navigateColor myActiveBorderColor)
     -- property query
     role = stringProperty "WM_WINDOW_ROLE"
 
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","-"]
+myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","boro","pers","-"]
 
 myFloatManageHook = composeOne . concat $
     [ [ (className =? "Gsimplecal" -?> doRectFloat (W.RationalRect 0.75 0.02 0.25 0.23))

@@ -1,0 +1,177 @@
+#!/bin/bash
+# set -x # debug!
+# damato new uberrc
+#
+
+# lighter version for bash on devices
+
+
+if [[ ! $_BASHRC =~ "1" ]] ; then
+  # profile-type settings
+  export _V=$_VV
+
+
+  # this script replaces both .bashrc and .bash_profile
+  # cleanup any traces of previous schemes
+  for F in ~/.bash_profile ~/.bash_logout ~/.bashrc-cd ~/bashrc-cd; do
+    [ -f $F ] && \mv $F $F.disabled -f > /dev/null
+    done
+
+  # if .bash_profile is not already a hard link to this file, make it so
+#  [ ! -f ~/.bash_profile ] && ln ~/.bashrc ~/.bash_profile -f
+
+  # Set the initial path
+  export PATH="$PATH:$HOME/dotfiles"
+
+  # Aliases and functions
+  
+  [ $(uname) = FreeBSD ] && alias ls="ls -FCG" || alias ls="ls -FC --color=auto"
+  alias ll="ls -lArt"
+  alias lss='ls -rhS'
+  alias lst='ls -rht'
+  alias la="ls -a"
+  alias l='ls -lah'
+  alias lla="ls -lah"
+  alias ..='cd ..'
+  alias ...='cd ../..'
+  alias ....='cd ../../..'
+  alias .....='cd ../../../..'
+  alias dog='sed "/ *#/d; /^ *$/d"' # cat without comments and whitespace
+  alias ipsort='sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 '
+
+  function bu() { cp $1 $1-$(date +%Y-%m-%d-%H-%M) -vba ;} # backup a file with a timestamp
+
+  # indicate we have completed profile-type settings for next time
+  export _BASHRC=1:$_BASHRC
+
+fi # profile-type settings
+
+# Exit if not interactive shell
+# [[ $- =~ "i" ]] || return
+
+  # for interactive shells
+  # Setup some environment variables.
+  HISTCONTROL=ignoredups:ignorespace
+  HISTTIMEFORMAT="%F %R "
+  HISTIGNORE="&:[bf]g:exit"
+  HISTSIZE=50000
+  HISTFILESIZE=1000000
+  # append to the history file, don't overwrite it
+  shopt -s histappend
+  shopt -s histverify
+  shopt -s checkwinsize
+  shopt -s no_empty_cmd_completion
+  shopt -s checkhash
+  shopt -s cdspell
+  shopt -s extglob
+  shopt -s globstar
+
+  # note to self: get keycode with echo <Ctrl+v><key>
+  bind '"\e[6~":end-of-history' # PgDn
+  bind '"\e[5~":dynamic-complete-history' # PgUp
+  bind 'set blink-matching-paren on'
+  bind 'set completion-ignore-case on'
+  bind 'set completion-map-case on'
+  bind 'set disable-completion off'
+  bind 'set expand-tilde off'
+  bind 'set horizontal-scroll-mode off'
+  bind 'set mark-directories on'
+  bind 'set mark-symlinked-directories off'
+  bind 'set match-hidden-files on'
+  bind 'set prefer-visible-bell on'
+  bind 'set show-all-if-ambiguous off'
+  bind 'set show-all-if-unmodified off'
+  bind 'set skip-completed-text off'
+  bind 'set bell-style none'
+  bind 'set comment-begin #'
+  bind 'set completion-prefix-display-length 2'
+  bind 'set completion-query-items 6000'
+
+
+  if tput colors &> /dev/null; then # this terminal does color
+  	# colored man pages thanks Arch wiki
+	# http://unix.stackexchange.com/a/7431
+	man() {
+		# md, me = bold (red)
+		# se, so = highlight
+		# us, ue = underlined
+		env \
+		LESS_TERMCAP_md=$'\E[01;31m' \
+		LESS_TERMCAP_me=$'\E[0m' \
+		LESS_TERMCAP_se=$'\E[0m' \
+		LESS_TERMCAP_so=$'\E[01;37;42m' \
+		LESS_TERMCAP_us=$'\E[04;33m' \
+		LESS_TERMCAP_ue=$'\E[0m' \
+		GROFF_NO_SGR=1 \
+		man "$@"
+	}
+  	function pscolor() {
+  		# print hash-based color code for prompt
+  		# no args clear color
+  		[ -z "$1" ] && echo -en "\e[0m" && return
+  		local col=(0\;31 0\;32 0\;33 0\;35 0\;36 0\;37 1\;31 1\;32 1\;33 1\;34 \
+  			1\;35 1\;36 1\;37 4\;31 4\;32 4\;33 4\;34 4\;35 4\;36 4\;37)
+  		local param=$1
+  		set -- $( echo $* | cksum )
+  		local index=$(( $1 % ${#col[*]} ))
+  		if [[ "$param" == "damato" ]]; then
+			echo -en "\e[0;34m"
+			else
+	  		echo -en "\e[${col[$index]}m"
+			fi
+  		}
+  	function colorize() {
+  		# print hash-based colored text
+  		[[ -z "$@" ]] && echo -en "\e[0m" && return
+  		local col=(0\;31 0\;32 0\;33 0\;35 0\;36 0\;37 1\;31 1\;32 1\;33 1\;34 \
+  			1\;35 1\;36 1\;37 4\;31 4\;32 4\;33 4\;34 4\;35 4\;36 4\;37)
+  		local param="$@"
+  		set -- $( echo "$@" | cksum )
+  		local index=$(( $1 % ${#col[*]} ))
+  		echo -en "\e[${col[$index]}m${param}\e[0m\n"
+  		}
+  	NORMAL="\[\e[0;0m\]"
+  	RED="\[\e[0;31m\]"
+  	GREEN="\[\e[1;32m\]"
+
+  else
+  	function pscolor() { echo $1; }
+  fi
+
+  if [[ $EUID == 0 ]] ; then
+    export PS1="\n\w\n\[\e[0m\w\n$RED\u$NORMAL@\[$(pscolor $HOSTNAME)\]\h$NORMAL $RED#$NORMAL "
+  else
+    export PS1="\[\e[0m\w\n\[$( pscolor $USER )\]\u$NORMAL@\[$(pscolor $HOSTNAME)\]\h$NORMAL $GREEN\$$NORMAL "
+  fi
+
+  function sshpkey() { cat ~/.ssh/*pub | ssh $1 "cat - >> ~/.ssh/authorized_keys"; }
+  alias pkey='echo $K >> ~/.ssh/authorized_keys'
+
+  export LESS="-R -A"
+
+  if [[ ! $EUID == 0 ]] ; then
+    for CMD in systemctl journalctl nmap su service vim apt-get yum dpkg rpm chmod chown mount umount reboot fdisk parted ip pacman iptables find poweroff shutdown reboot find systemctl journalctl; do
+      alias $CMD="sudo $CMD"
+      done
+    fi
+  alias please='eval "sudo $(fc -ln -1)"'
+
+  # Press <escape> then <space> to sudo !!
+  bind '"\e\ ":"\C-k \C-usudo !!\n"'
+
+  function ff() { find . -type f -iname "*$1*" -printf "%AY-%Am-%Ad-%AI-%AM\t%k\t\"%p\"\n"; }
+  function fd() { find . -type d -iname "*$1*" -printf "\"%f\"\n"; }
+
+  export _BASHRC=2:$_BASHRC
+
+  alias gid='dig +noall +answer -x' # reverse dns lookup
+
+  for C in start stop status enable disable restart; do alias $C="systemctl $C"; done
+  
+  alias yuma="yum --enablerepo=\*"
+  alias yyuma="yum -y --enablerepo=\*"
+  alias yyum="yum -y"
+
+  for O in i m n o p r s ; do colorize $(uname -$O); done
+
+  echo
