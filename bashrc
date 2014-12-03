@@ -311,16 +311,15 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
 
   echo "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-  HELLO="$( lsb_release -ds | fmt )"
-  [[ -z $HELLO ]] && HELLO=$(cat /etc/redhat-release)
-  [[ -z $HELLO ]] && HELLO="I'm confused"
+  uname -n
+  uname -o
+  [ -f /etc/redhat-release ] && cat /etc/redhat-release
   colorize $HELLO
   date
 
   # http://is.muni.cz/www/xsiska2/2014/08/01/get-faster-in-bash.html
-  bind space:magic-space
 
   # needs work
-  alias r=\'	 X=1800;O=eDP1;Y=$(( $X * 9 / 16 ));M=( $(cvt -r $X $Y|sed -nr 's/^Modeline (.*)$/\1/p') );xrandr --rmmode $M 2>/dev/null; xrandr --verbose --output $O --newmode ${M[@]}; xrandr --verbose --addmode $O $M; xrandr --verbose --output $O --mode $M #resolution settings\'
+  alias r='X=1800;O=eDP1;Y=$(( $X * 9 / 16 ));M=( $(cvt -r $X $Y|sed -nr '"'"'s/^Modeline (.*)$/\1/p'"'"') );xrandr --rmmode $M 2>/dev/null; xrandr --verbose --output $O --newmode ${M[@]}; xrandr --verbose --addmode $O $M; xrandr --verbose --output $O --mode $M #resolution settings'
 
   fi
