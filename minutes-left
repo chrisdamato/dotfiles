@@ -101,14 +101,12 @@ while (( LEFT > 0 )); do
   echo "Next warning at $LEFT minutes left"
   SLEEP=$(( SLEEP - LEFT ))
   echo "Sleeping for $SLEEP minutes"
-  dump_if_debug
   sleep $(( SLEEP * 60 ))
 
 done
 
 while (( 1 )); do
 
-  dump_if_debug
   repeat $LOOP "$ALARM" > /dev/null
 
 done 
