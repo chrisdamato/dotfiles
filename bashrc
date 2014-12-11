@@ -59,7 +59,7 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
   for script in /etc/profile.d/*.sh ; do
           if [ -r $script ] ; then
                   . $script
-  	fi
+    fi
   done
 
   # Aliases and functions
@@ -153,59 +153,59 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   # update history record after each command
   # set title for supported terminals
   if [[ $TERM = linux ]]; then
-  		PROMPT_COMMAND="_N=$(( $_N + 1 ));history -a"
-  	else
-		PROMPT_COMMAND='_N=$(( $_N + 1 ));history -a; echo -e "\033]0;$USER@$(hostname -s)\007"'
-  	fi
+        PROMPT_COMMAND="_N=$(( $_N + 1 ));history -a"
+    else
+        PROMPT_COMMAND='_N=$(( $_N + 1 ));history -a; echo -e "\033]0;$USER@$(hostname -s)\007"'
+    fi
 
   if tput colors &> /dev/null; then # this terminal does color
-  	# colored man pages thanks Arch wiki
-	# http://unix.stackexchange.com/a/7431
-	man() {
-		# md, me = bold (red)
-		# se, so = highlight
-		# us, ue = underlined
-		env \
-		LESS_TERMCAP_md=$'\E[01;31m' \
-		LESS_TERMCAP_me=$'\E[0m' \
-		LESS_TERMCAP_se=$'\E[0m' \
-		LESS_TERMCAP_so=$'\E[01;37;42m' \
-		LESS_TERMCAP_us=$'\E[04;33m' \
-		LESS_TERMCAP_ue=$'\E[0m' \
-		GROFF_NO_SGR=1 \
-		man "$@"
-	}
-  	function pscolor() {
-  		# print hash-based color code for prompt
-  		# no args clear color
-  		[ -z "$1" ] && echo -en "\e[0m" && return
-  		local col=(0\;31 0\;32 0\;33 0\;35 0\;36 0\;37 1\;31 1\;32 1\;33 1\;34 \
-  			1\;35 1\;36 1\;37 4\;31 4\;32 4\;33 4\;34 4\;35 4\;36 4\;37)
-  		local param=$1
-  		set -- $( echo $* | cksum )
-  		local index=$(( $1 % ${#col[*]} ))
-  		if [[ "$param" == "damato" ]]; then
-			echo -en "\e[0;34m"
-			else
-	  		echo -en "\e[${col[$index]}m"
-			fi
-  		}
-  	function colorize() {
-  		# print hash-based colored text
-  		[[ -z "$@" ]] && echo -en "\e[0m" && return
-  		local col=(0\;31 0\;32 0\;33 0\;35 0\;36 0\;37 1\;31 1\;32 1\;33 1\;34 \
-  			1\;35 1\;36 1\;37 4\;31 4\;32 4\;33 4\;34 4\;35 4\;36 4\;37)
-  		local param="$@"
-  		set -- $( echo "$@" | cksum )
-  		local index=$(( $1 % ${#col[*]} ))
-  		echo -en "\e[${col[$index]}m${param}\e[0m\n"
-  		}
-  	NORMAL="\[\e[0;0m\]"
-  	RED="\[\e[0;31m\]"
-  	GREEN="\[\e[1;32m\]"
+    # colored man pages thanks Arch wiki
+    # http://unix.stackexchange.com/a/7431
+    man() {
+        # md, me = bold (red)
+        # se, so = highlight
+        # us, ue = underlined
+        env \
+        LESS_TERMCAP_md=$'\E[01;31m' \
+        LESS_TERMCAP_me=$'\E[0m' \
+        LESS_TERMCAP_se=$'\E[0m' \
+        LESS_TERMCAP_so=$'\E[01;37;42m' \
+        LESS_TERMCAP_us=$'\E[04;33m' \
+        LESS_TERMCAP_ue=$'\E[0m' \
+        GROFF_NO_SGR=1 \
+        man "$@"
+    }
+    function pscolor() {
+        # print hash-based color code for prompt
+        # no args clear color
+        [ -z "$1" ] && echo -en "\e[0m" && return
+        local col=(0\;31 0\;32 0\;33 0\;35 0\;36 0\;37 1\;31 1\;32 1\;33 1\;34 \
+            1\;35 1\;36 1\;37 4\;31 4\;32 4\;33 4\;34 4\;35 4\;36 4\;37)
+        local param=$1
+        set -- $( echo $* | cksum )
+        local index=$(( $1 % ${#col[*]} ))
+        if [[ "$param" == "damato" ]]; then
+            echo -en "\e[0;34m"
+            else
+            echo -en "\e[${col[$index]}m"
+            fi
+        }
+    function colorize() {
+        # print hash-based colored text
+        [[ -z "$@" ]] && echo -en "\e[0m" && return
+        local col=(0\;31 0\;32 0\;33 0\;35 0\;36 0\;37 1\;31 1\;32 1\;33 1\;34 \
+            1\;35 1\;36 1\;37 4\;31 4\;32 4\;33 4\;34 4\;35 4\;36 4\;37)
+        local param="$@"
+        set -- $( echo "$@" | cksum )
+        local index=$(( $1 % ${#col[*]} ))
+        echo -en "\e[${col[$index]}m${param}\e[0m\n"
+        }
+    NORMAL="\[\e[0;0m\]"
+    RED="\[\e[0;31m\]"
+    GREEN="\[\e[1;32m\]"
 
   else
-  	function pscolor() { echo $1; }
+    function pscolor() { echo $1; }
   fi
 
   if [[ $EUID == 0 ]] ; then
@@ -320,8 +320,15 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   # http://is.muni.cz/www/xsiska2/2014/08/01/get-faster-in-bash.html
   bind space:magic-space
 
+# fuzzy history search  [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
+# xmonad javaws http://permalink.gmane.org/gmane.comp.lang.haskell.xmonad/978 
+export AWT_TOOLKIT=MToolkit
+
+  alias word='nohup env WINEARCH=win32 WINEPREFIX=$HOME/office wine "/home/damato/office/drive_c/Program Files/Microsoft Office/Office14/WINWORD.EXE" > $HOME/office.out &'
+  alias lsblk="lsblk --output NAME,FSTYPE,SIZE,LABEL,MOUNTPOINT,PARTLABEL,VENDOR"
+  alias mstsc="rdesktop -K -geometry 1280x1024x16"
   fi
 
 
 
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash

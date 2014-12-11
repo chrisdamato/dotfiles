@@ -1,0 +1,20 @@
+#!/bin/bash
+H="$1"
+D="BVPD"
+U='administrator'
+P="paige1127"
+case $1 in
+
+	freenas) U="root"; P="Az8q#9Ml"; D=""; H="10.18.3.4" ;;
+	s4) H="10.18.3.9";;
+	189|nas) H="10.18.3.189"; D=""; P="password";;
+	bob|bobed) H=bobedmundsvr;D="";P="#admin2010$";;
+
+
+	esac
+# C="xfreerdp --no-nla --ignore-certificate -K -g 1800x950 -u $U -p $P -d $D $H"
+C="rdesktop -K -g 1800x950 -u $U -p \"$P\" ${D:+-d $D} $H"
+echo $C
+nohup $C > "nohup-$H.out" &
+echo $?
+
