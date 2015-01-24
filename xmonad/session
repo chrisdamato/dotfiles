@@ -39,7 +39,7 @@ nm-applet &
 xscreensaver -no-splash &
 
 # start service and show taskbar icon
-dropbox start &
+# dropbox start &
 
 # watching for media changes etc
 pcmanfm --daemon-mode &

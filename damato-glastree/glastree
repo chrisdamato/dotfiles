@@ -28,6 +28,14 @@ use vars qw/ $opt_help $opt_version /;
 
 # damato
 use vars qw/ $opt_exclude_from @exclude /;
+use vars qw/ $count_dirs $count_files $count_soft $count_hard $count_skip $count_exclude /;
+$count_dirs = 0;
+$count_files = 0;
+$count_soft = 0;
+$count_hard = 0;
+$count_skip = 0;
+$count_exclude = 0;
+
 
 my $version = "glastree v1.03 stable, http://igmus.org/code/\n";
 
@@ -107,6 +115,20 @@ sub main
     rmkdir (cleanpath ("$target/$today"));
 
     recurse ($source);
+
+    print STDERR "\nSnapshot completed without error.\n\n";
+
+    print STDERR "Source:             $source\n";
+    print STDERR "Previous snapshot:  $target\/$yesterday\n";
+    print STDERR "Current snapshot:   $target\/$today\n\n";
+
+    print STDERR sprintf('%-7d',$count_dirs) . "directories traversed\n";
+    print STDERR sprintf('%-7d',$count_files) . "new or updated files\n";
+    print STDERR sprintf('%-7d',$count_hard) . "unchanged files hardlinked\n";
+    print STDERR sprintf('%-7d',$count_soft) . "soft links created\n";
+    print STDERR sprintf('%-7d',$count_exclude) . "items excluded from snapshot\n";
+    print STDERR sprintf('%-7d',$count_skip) . "existing destination items skipped\n";
+
 }
 
 
@@ -140,10 +162,13 @@ sub recurse
 	foreach my $exp ( @exclude ) {
 		chomp ($exp);
 	 	print STDOUT "skip: ($exp) $_\n" for ( grep { ($cwd."/".$_) =~ /$exp/ } @files );
+	 	$count_exclude+=1 for ( grep { ($cwd."/".$_) =~ /$exp/ } @files );
+#	 	{ print STDOUT "skip: ($exp) $_\n"; $count_exclude+=1 } for ( grep { ($cwd."/".$_) =~ /$exp/ } @files );
 		@files = grep { ($cwd."/".$_) !~ /$exp/ } @files ;
 		}
 
-	print STDOUT "\nDirectory: $cwd\n";
+    print STDOUT "\nDirectory: $cwd\n";
+    $count_dirs+=1;
 
     foreach $file (@files)
     {
@@ -158,11 +183,12 @@ sub recurse
 	if ( -f $today_path or -l $today_path ) #damato
 		{
 			print STDOUT "exists: $file\n";
-
+			$count_skip += 1;
 	}		
 
 	elsif (-l $new_path) {
             print STDOUT "symlink: $file\n";
+	    $count_soft += 1;
 	    symlink (readlink ($new_path), $today_path)
 		  or die "ERROR: Could not symlink \"$new_path\" to \"$today_path\""; #damato
 	}
@@ -178,11 +204,13 @@ sub recurse
 	    {
 		# original
 		print STDOUT "file: $file\n";
+		$count_files += 1;
 		copystat ($new_path, $today_path, $new_stat)
 		  or die "ERROR: Could not copy \"$new_path\" to \"$today_path\""; #damato
 	    }
 	    else {
 		print STDOUT "link: $file\n";
+		$count_hard += 1;
 		link ($yesterday_path, $today_path)
 			  or die "ERROR: Could not hardlink \"$yesterday_path\" to \"$today_path\""; #damato
 	    }
@@ -190,6 +218,7 @@ sub recurse
 
 	else {
 	    print STDERR "warning: no logic to handle $cwd/$file; skipping\n";
+	    $count_skip += 1;
 	}
     }
 

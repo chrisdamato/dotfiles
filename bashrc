@@ -148,6 +148,10 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   bind 'set comment-begin #'
   bind 'set completion-prefix-display-length 2'
   bind 'set completion-query-items 6000'
+  # ctrl-arrows
+  bind '"\e[1;5D": backward-word'
+  bind '"\e[1;5C": forward-word'
+
 
 
   # update history record after each command
@@ -246,7 +250,7 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   export RSYNC_RSH='ssh -o PermitLocalCommand=no'
 
   if [[ ! $EUID == 0 ]] ; then
-    for CMD in systemctl journalctl nmap su service vim apt-get yum dpkg rpm chmod chown mount umount reboot fdisk parted ip pacman iptables find poweroff shutdown reboot find; do
+    for CMD in systemctl journalctl nmap su service vim apt-get yum dpkg rpm chmod chown mount umount reboot fdisk parted ip pacman iptables find poweroff shutdown reboot find start stop status eject lsof; do
       alias $CMD="sudo $CMD"
       done
     fi
