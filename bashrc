@@ -250,7 +250,7 @@ if [[ ! $_BASHRC =~ "2" ]] ; then
   export RSYNC_RSH='ssh -o PermitLocalCommand=no'
 
   if [[ ! $EUID == 0 ]] ; then
-    for CMD in systemctl journalctl nmap su service vim apt-get yum dpkg rpm chmod chown mount umount reboot fdisk parted ip pacman iptables find poweroff shutdown reboot find start stop status eject lsof; do
+    for CMD in systemctl journalctl nmap su service vim apt-get yum dpkg rpm chmod chown mount umount reboot fdisk parted ip pacman iptables find poweroff shutdown reboot find start stop status eject lsof ping; do
       alias $CMD="sudo $CMD"
       done
     fi
@@ -334,5 +334,5 @@ export AWT_TOOLKIT=MToolkit
   alias mstsc="rdesktop -K -geometry 1280x1024x16"
   fi
 
-
-
+# OPAM configuration
+. /home/damato/.opam/opam-init/init.sh > /dev/null 2> /dev/null || true

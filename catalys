@@ -1,5 +1,5 @@
 #!/bin/bash
-GEOMETRY="$(xrandr --current|sed -nr 's/^.* connected (\w+)\+.*/\1/p'|head -n1)"
+GEOMETRY="$(xrandr --current|sed -nr 's/^.* connected (\w+)\+.*/\1/p'|sed -n ${1:-1}p)"
 echo $GEOMETRY
 #rdesktop 10.18.3.251 -K -u administrator -g workarea -p P@ssw0rd! # Phone system voice mail Avaya Voice Mail Pro server 18.18.3.251 name:catalys-umgbwjo
 rdesktop 10.18.3.251 -K -u administrator -g $GEOMETRY -p P@ssw0rd! # Phone system voice mail Avaya Voice Mail Pro server 18.18.3.251 name:catalys-umgbwjo

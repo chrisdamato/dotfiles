@@ -18,7 +18,7 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
     done
 
   # if .bash_profile is not already a hard link to this file, make it so
-#  [ ! -f ~/.bash_profile ] && ln ~/.bashrc ~/.bash_profile -f
+[ ! -f ~/.bash_profile ] && ln ~/.bashrc ~/.bash_profile -f
 
   # Set the initial path
   export PATH="$PATH:$HOME/dotfiles"
@@ -86,6 +86,9 @@ fi # profile-type settings
   bind 'set comment-begin #'
   bind 'set completion-prefix-display-length 2'
   bind 'set completion-query-items 6000'
+  bind '"\e\ ":"\C-k \C-usudo !!\n"'
+  bind '"\e[1;5D": backward-word'
+  bind '"\e[1;5C": forward-word'
 
 
   if tput colors &> /dev/null; then # this terminal does color

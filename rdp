@@ -16,5 +16,6 @@ case $1 in
 C="rdesktop -K -g 1800x950 -u $U -p $P ${D:+-d $D} $H"
 echo $C
 nohup $C > "nohup-$H.out" &
+cat "nohup-$H.out"
 echo $?
 
