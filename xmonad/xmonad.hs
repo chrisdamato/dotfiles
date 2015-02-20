@@ -503,6 +503,7 @@ myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","boro","pers","-"]
 myFloatManageHook = composeOne . concat $
     [ [ (className =? "Gsimplecal" -?> doRectFloat (W.RationalRect 0.75 0.02 0.25 0.23))
 --      , (className =? "VirtualBox" -?> doRectFloat (W.RationalRect 0 0 1 1))
+      , (className =? "xfreerdp" -?> doRectFloat (W.RationalRect 0 0.02 1 1 ))
       , (className =? "Screenkey" -?> doIgnore)
       , (role =? "gimp-toolbox" -?> doMaster)
       ]
@@ -511,7 +512,7 @@ myFloatManageHook = composeOne . concat $
     ]
     where
       cCenter = [ "Gmrun", "Gpicker", "Gcolor2", "xfreerdp", "rdesktop" ]
-      masters = [ "Emacs" ]
+      masters = [ "Emacs","Gimp" ]
       doCenterFloat' = doCenterFloat <+> doMaster
       doMaster = doF W.shiftMaster
       role = stringProperty "WM_WINDOW_ROLE"
@@ -538,7 +539,7 @@ myShiftManageHook = composeOne . concat $
                     , ("Skype", "9.im")
                     , ("Gimp", "8.gimp")
                     , ("Emacs", "3.emacs")
-                    , ("xfreerdp", "rdp-x")
+                    --, ("xfreerdp", "rdp-x")
 --                    , ("VirtualBox","7")
                     ]
       ]

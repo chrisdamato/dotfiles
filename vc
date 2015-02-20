@@ -1,0 +1,5 @@
+#!/bin/bash
+[ $(basename $0) = vv ] && CMD="vncviewer Fullscreen ViewOnly PasswordFile=~/vnc Log *:stdout:100 $*"
+[ $(basename $0) = vc ] && CMD="vncviewer Fullscreen PasswordFile=~/vnc Log *:stdout:100 $*"
+echo $CMD
+eval $CMD

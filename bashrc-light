@@ -1,30 +1,24 @@
 #!/bin/bash
 # set -x # debug!
-# damato new uberrc
-#
+# damato new uberrc - LIGHT VERSION
+# 2015-02
+# link as .bashrc .bash_profile and .bash_logout
 
-# lighter version for bash on devices
+# THIS="$(basename -- $0 )"
 
+#THIS_REALLY="$(test -L "$0" && readlink "$0" || echo "$0")"
 
-if [[ ! $_BASHRC =~ "1" ]] ; then
-  # profile-type settings
-  export _V=$_VV
+if [ "$THIS" = ".bash_logout" ] ; then
+    # The individual login shell cleanup file, executed when a login shell exits
+    return
+    fi
 
+# profile-type settings
 
-  # this script replaces both .bashrc and .bash_profile
-  # cleanup any traces of previous schemes
-  for F in ~/.bash_profile ~/.bash_logout ~/.bashrc-cd ~/bashrc-cd; do
-    [ -f $F ] && \mv $F $F.disabled -f > /dev/null
-    done
-
-  # if .bash_profile is not already a hard link to this file, make it so
-[ ! -f ~/.bash_profile ] && ln ~/.bashrc ~/.bash_profile -f
-
-  # Set the initial path
-  export PATH="$PATH:$HOME/dotfiles"
+  # The personal initialization file, executed for login shells, NOT every new terminal
+  # NO OUTPUT TO TERMINAL IN THIS SECTION
 
   # Aliases and functions
-  
   [ $(uname) = FreeBSD ] && alias ls="ls -FCG" || alias ls="ls -FC --color=auto"
   alias ll="ls -lArt"
   alias lss='ls -rhS'
@@ -39,33 +33,34 @@ if [[ ! $_BASHRC =~ "1" ]] ; then
   alias dog='sed "/ *#/d; /^ *$/d"' # cat without comments and whitespace
   alias ipsort='sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 '
 
-  function bu() { cp $1 $1-$(date +%Y-%m-%d-%H-%M) -vba ;} # backup a file with a timestamp
+  # NO OUTPUT TO TERMINAL IN THIS SECTION
 
-  # indicate we have completed profile-type settings for next time
-  export _BASHRC=1:$_BASHRC
 
-fi # profile-type settings
 
-# Exit if not interactive shell
-# [[ $- =~ "i" ]] || return
+# if not interactive end here
+[[ ! "$-" =~ "i" ]] && exit 0
 
-  # for interactive shells
-  # Setup some environment variables.
+  # just print a blank line if we are running interactively
+  echo
+  #[[ "${BASH_SOURCE[0]}" != "${0}" ]] && echo "script ${BASH_SOURCE[0]} is being sourced ..."
+   
+  # THIS SECTION IS FOR INTERACTIVE SHELLS
+
   HISTCONTROL=ignoredups:ignorespace
   HISTTIMEFORMAT="%F %R "
   HISTIGNORE="&:[bf]g:exit"
   HISTSIZE=50000
   HISTFILESIZE=1000000
-  # append to the history file, don't overwrite it
-  shopt -s histappend
+
+  shopt -s histappend # append to the history file, don't overwrite it
   shopt -s histverify
   shopt -s checkwinsize
   shopt -s no_empty_cmd_completion
   shopt -s checkhash
   shopt -s cdspell
   shopt -s extglob
-  shopt -s globstar
 
+  # READLINE settings 
   # note to self: get keycode with echo <Ctrl+v><key>
   bind '"\e[6~":end-of-history' # PgDn
   bind '"\e[5~":dynamic-complete-history' # PgUp
@@ -89,7 +84,38 @@ fi # profile-type settings
   bind '"\e\ ":"\C-k \C-usudo !!\n"'
   bind '"\e[1;5D": backward-word'
   bind '"\e[1;5C": forward-word'
+  # Press <escape> then <space> to sudo !!
+  bind '"\e\ ":"\C-k \C-usudo !!\n"'
 
+  # functions and aliases for convenience
+  alias please='eval "sudo $(fc -ln -1)"'
+  alias gid='dig +noall +answer -x' # reverse dns lookup
+
+  alias yuma="yum --enablerepo=\*"
+  alias yyuma="yum -y --enablerepo=\*"
+  alias yyum="yum -y"
+
+  # backup a file with a timestamp
+  function bu() { cp $1 $1-$(date +%Y-%m-%d-%H-%M) -vba ;} 
+
+  # systemd shortcuts
+  for C in start stop status enable disable restart; do alias $C="systemctl $C"; done
+
+  # automatic sudo for common admin tasks
+  if [[ ! $EUID == 0 ]] ; then
+    for CMD in systemctl journalctl nmap su service vim apt-get yum dpkg rpm chmod \
+        chown mount umount reboot fdisk parted ip pacman iptables find poweroff \
+	shutdown reboot find systemctl journalctl; do
+      alias $CMD="sudo $CMD"
+      done
+    fi
+  
+  function sshpkey() { cat ~/.ssh/*pub | ssh $1 "cat - >> ~/.ssh/authorized_keys"; }
+  alias pkey='echo $K >> ~/.ssh/authorized_keys'
+
+  # fast find
+  function ff() { find . -type f -iname "*$1*" -printf "%AY-%Am-%Ad-%AI-%AM\t%k\t\"%p\"\n"; }
+  function fd() { find . -type d -iname "*$1*" -printf "\"%f\"\n"; }
 
   if tput colors &> /dev/null; then # this terminal does color
   	# colored man pages thanks Arch wiki
@@ -108,73 +134,49 @@ fi # profile-type settings
 		GROFF_NO_SGR=1 \
 		man "$@"
 	}
-  	function pscolor() {
-  		# print hash-based color code for prompt
-  		# no args clear color
-  		[ -z "$1" ] && echo -en "\e[0m" && return
-  		local col=(0\;31 0\;32 0\;33 0\;35 0\;36 0\;37 1\;31 1\;32 1\;33 1\;34 \
-  			1\;35 1\;36 1\;37 4\;31 4\;32 4\;33 4\;34 4\;35 4\;36 4\;37)
-  		local param=$1
-  		set -- $( echo $* | cksum )
-  		local index=$(( $1 % ${#col[*]} ))
-  		if [[ "$param" == "damato" ]]; then
-			echo -en "\e[0;34m"
-			else
-	  		echo -en "\e[${col[$index]}m"
-			fi
+
+  	function colr() {
+  		# get hash-based color code for parameter (or reset if none)
+  		[[ -z "$@" ]] && echo -en "\e[0m" && return
+		# list of acceptable color codes
+  		local COLOR_LIST=(0\;32 0\;33 0\;35 0\;36 1\;32 1\;33 \
+  			1\;35 1\;36 4\;32 4\;33 4\;34 4\;35 4\;36 )
+		local COUNT="${#COLOR_LIST[*]}"
+		local HASH="$( echo "$@" | cksum | cut -d' ' -f1 )"
+		local INDEX="$(( $HASH % $COUNT))"
+  		local CODE="\e[${COLOR_LIST[$INDEX]}m"
+		# overrides
+		[[ ":damato:chris:" =~ ":$@:" ]] && CODE="\e[0;34m";
+		[[ ":root:Administrator:" =~ ":$@:" ]] && CODE="\e[1;31m";
+		echo -en "$CODE"
   		}
+
+  	function pscolor() {
+  		# wrap param in hash-based color codes escaped for use in PS1 prompt
+		echo -en "\[$(colr $*)\]${*}\[$(colr)\]";
+		}
+
+
   	function colorize() {
   		# print hash-based colored text
   		[[ -z "$@" ]] && echo -en "\e[0m" && return
-  		local col=(0\;31 0\;32 0\;33 0\;35 0\;36 0\;37 1\;31 1\;32 1\;33 1\;34 \
-  			1\;35 1\;36 1\;37 4\;31 4\;32 4\;33 4\;34 4\;35 4\;36 4\;37)
-  		local param="$@"
-  		set -- $( echo "$@" | cksum )
-  		local index=$(( $1 % ${#col[*]} ))
-  		echo -en "\e[${col[$index]}m${param}\e[0m\n"
+		echo -en "$(colr $*)${*}$(colr)";
   		}
-  	NORMAL="\[\e[0;0m\]"
-  	RED="\[\e[0;31m\]"
-  	GREEN="\[\e[1;32m\]"
 
   else
-  	function pscolor() { echo $1; }
-  fi
+     #no color terminal 
+    function colorize() { echo -n "$@"; }
+    function pscolor() { echo -n "$@"; }
+    
+  fi # color terminal
 
-  if [[ $EUID == 0 ]] ; then
-    export PS1="\n\w\n\[\e[0m\w\n$RED\u$NORMAL@\[$(pscolor $HOSTNAME)\]\h$NORMAL $RED#$NORMAL "
-  else
-    export PS1="\[\e[0m\w\n\[$( pscolor $USER )\]\u$NORMAL@\[$(pscolor $HOSTNAME)\]\h$NORMAL $GREEN\$$NORMAL "
-  fi
+  export PS1="\n\! \w\n$(pscolor $USER)@$(pscolor $HOSTNAME)\$ "
+  export PROMPT_COMMAND="history -a"
+#  trap 'echo -ne "\033]0;$BASH_COMMAND\007"' DEBUG
 
-  function sshpkey() { cat ~/.ssh/*pub | ssh $1 "cat - >> ~/.ssh/authorized_keys"; }
-  alias pkey='echo $K >> ~/.ssh/authorized_keys'
-
-  export LESS="-R -A"
-
-  if [[ ! $EUID == 0 ]] ; then
-    for CMD in systemctl journalctl nmap su service vim apt-get yum dpkg rpm chmod chown mount umount reboot fdisk parted ip pacman iptables find poweroff shutdown reboot find systemctl journalctl; do
-      alias $CMD="sudo $CMD"
-      done
-    fi
-  alias please='eval "sudo $(fc -ln -1)"'
-
-  # Press <escape> then <space> to sudo !!
-  bind '"\e\ ":"\C-k \C-usudo !!\n"'
-
-  function ff() { find . -type f -iname "*$1*" -printf "%AY-%Am-%Ad-%AI-%AM\t%k\t\"%p\"\n"; }
-  function fd() { find . -type d -iname "*$1*" -printf "\"%f\"\n"; }
-
-  export _BASHRC=2:$_BASHRC
-
-  alias gid='dig +noall +answer -x' # reverse dns lookup
-
-  for C in start stop status enable disable restart; do alias $C="systemctl $C"; done
   
-  alias yuma="yum --enablerepo=\*"
-  alias yyuma="yum -y --enablerepo=\*"
-  alias yyum="yum -y"
-
-  for O in i m n o p r s ; do colorize $(uname -$O); done
-
+  [ -f /etc/redhat-release ] && echo $(colorize $(cat /etc/redhat-release) )
+  for A in $(for O in i m o p r s ; do uname -$O; done | sort | uniq); do echo -n $(colorize $A) " "; done
   echo
+
+# end of .bashrc interactive settings
