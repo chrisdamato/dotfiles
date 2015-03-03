@@ -1,0 +1,1 @@
+gnome-terminal -e alsamixer || xfce4-terminal -e alsamixer || xterm alsamixer

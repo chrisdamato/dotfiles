@@ -18,6 +18,41 @@ if [ "$THIS" = ".bash_logout" ] ; then
   # The personal initialization file, executed for login shells, NOT every new terminal
   # NO OUTPUT TO TERMINAL IN THIS SECTION
 
+  # added 2013-11-14 per http://lists.debian.org/debian-devel/2002/07/msg00259.html
+  export XAUTHORITY=$HOME/.Xauthority
+
+  # Functions to help us manage paths.  Second argument is the name of the
+  # path variable to be modified (default: PATH)
+  pathremove () {
+    local IFS=':'
+    local NEWPATH
+    local DIR
+    local PATHVARIABLE=${2:-PATH}
+    for DIR in ${!PATHVARIABLE} ; do
+      if [ "$DIR" != "$1" ] ; then
+        NEWPATH=${NEWPATH:+$NEWPATH:}$DIR
+      fi
+    done
+    export $PATHVARIABLE="$NEWPATH"
+  }
+  pathprepend () {
+    pathremove $1 $2
+    local PATHVARIABLE=${2:-PATH}
+    export $PATHVARIABLE="$1${!PATHVARIABLE:+:${!PATHVARIABLE}}"
+  }
+  pathappend () {
+    pathremove $1 $2
+    local PATHVARIABLE=${2:-PATH}
+    export $PATHVARIABLE="${!PATHVARIABLE:+${!PATHVARIABLE}:}$1"
+  }
+
+
+  # Set the initial path
+  pathprepend $HOME/dotfiles
+
+  # load system profile scripts
+  for script in /etc/profile.d/*.sh ; do [ -r $script ] && . $script ; done
+
   # Aliases and functions
   [ $(uname) = FreeBSD ] && alias ls="ls -FCG" || alias ls="ls -FC --color=auto"
   alias ll="ls -lArt"
@@ -38,7 +73,10 @@ if [ "$THIS" = ".bash_logout" ] ; then
 
 
 # if not interactive end here
-[[ ! "$-" =~ "i" ]] && exit 0
+[[ ! "$-" =~ "i" ]] && return
+
+  # if .bash_profile is not already a hard link to this file, make it so
+  [ ! -f ~/.bash_profile ] && ln ~/.bashrc ~/.bash_profile -f
 
   # just print a blank line if we are running interactively
   echo
