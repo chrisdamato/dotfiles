@@ -139,8 +139,11 @@ if [ "$THIS" = ".bash_logout" ] ; then
   # systemd shortcuts
   for C in start stop status enable disable restart; do alias $C="systemctl $C"; done
 
+  # permit root to use X display
+  if [[ "$DISPLAY" = ":0" ]]; then  xhost +si:localuser:root > /dev/null; fi
+
   # automatic sudo for common admin tasks
-  if [[ ! $EUID == 0 ]] ; then
+  if [[ ! $EUID == 0 ]] && which sudo &> /dev/null ; then
     for CMD in systemctl journalctl nmap su service vim apt-get yum dpkg rpm chmod \
         chown mount umount reboot fdisk parted ip pacman iptables find poweroff \
 	shutdown reboot find systemctl journalctl; do
@@ -208,13 +211,14 @@ if [ "$THIS" = ".bash_logout" ] ; then
     
   fi # color terminal
 
-  export PS1="\n\! \w\n$(pscolor $USER)@$(pscolor $HOSTNAME)\$ "
+  export PS1="\n\! \w\n\[\e[1;\$( [[ \$USER == root ]] && echo -n 31 || echo -n 32 )m\]\u\[\e[0m\]@$(pscolor $HOSTNAME)\$ "
   export PROMPT_COMMAND="history -a"
 #  trap 'echo -ne "\033]0;$BASH_COMMAND\007"' DEBUG
 
   
   [ -f /etc/redhat-release ] && echo $(colorize $(cat /etc/redhat-release) )
   for A in $(for O in i m o p r s ; do uname -$O; done | sort | uniq); do echo -n $(colorize $A) " "; done
-  echo
+  # print ip addresses (non-lo) if found with ip command
+  grep "inet\ .*[^l][^o]$" <( ip a 2>/dev/null ) | tr '/' ' ' | awk '{print $NF" "$2}'
 
 # end of .bashrc interactive settings
