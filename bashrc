@@ -67,6 +67,7 @@ if [ "$THIS" = ".bash_logout" ] ; then
   alias .....='cd ../../../..'
   alias dog='sed "/ *#/d; /^ *$/d"' # cat without comments and whitespace
   alias ipsort='sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 '
+  alias lsblk='lsblk --output NAME,TYPE,SIZE,FSTYPE,MOUNTPOINT,LABEL,PARTLABEL,VENDOR'
 
   # NO OUTPUT TO TERMINAL IN THIS SECTION
 
