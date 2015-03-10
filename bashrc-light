@@ -219,10 +219,15 @@ if [ "$THIS" = ".bash_logout" ] ; then
   export PROMPT_COMMAND="history -a"
 #  trap 'echo -ne "\033]0;$BASH_COMMAND\007"' DEBUG
 
+  function welcome() { 
+    [ -f /etc/redhat-release ] && echo $(colorize $(cat /etc/redhat-release) )
+    for A in $(for O in i m o p r s ; do uname -$O; done | sort | uniq); do echo -n $(colorize $A) " "; done; echo
+    # print ip addresses (non-lo) if found with ip command
+    # formerly: grep "inet\ .*[^l][^o]$" <( ip a 2>/dev/null ) | tr '/' ' ' | awk '{print $NF" "$2}'
+    hostname
+    ip -o -f inet a |grep -v '127\.0\.0\.1'|tr '/' ' '|awk '{print $2, $4}'
+    }
   
-  [ -f /etc/redhat-release ] && echo $(colorize $(cat /etc/redhat-release) )
-  for A in $(for O in i m o p r s ; do uname -$O; done | sort | uniq); do echo -n $(colorize $A) " "; done
-  # print ip addresses (non-lo) if found with ip command
-  grep "inet\ .*[^l][^o]$" <( ip a 2>/dev/null ) | tr '/' ' ' | awk '{print $NF" "$2}'
+  welcome
 
 # end of .bashrc interactive settings
