@@ -71,6 +71,9 @@ if [ "$THIS" = ".bash_logout" ] ; then
 
   # NO OUTPUT TO TERMINAL IN THIS SECTION
 
+  # don't like systemctl's auto paging feature
+  export SYSTEMD_PAGER=
+
 
 
 # if not interactive end here
@@ -212,7 +215,7 @@ if [ "$THIS" = ".bash_logout" ] ; then
     
   fi # color terminal
 
-  export PS1="\n\! \w\n\[\e[1;\$( [[ \$USER == root ]] && echo -n 31 || echo -n 32 )m\]\u\[\e[0m\]@$(pscolor $HOSTNAME)\$ "
+  export PS1="\n\! \w\n\[\e[1;\$( [[ \$USER == root ]] && echo -n 31 || echo -n 32 )m\]\u\[\e[0m\]@$(pscolor $(hostname -s ))\$ "
   export PROMPT_COMMAND="history -a"
 #  trap 'echo -ne "\033]0;$BASH_COMMAND\007"' DEBUG
 
