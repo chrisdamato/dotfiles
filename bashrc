@@ -237,5 +237,4 @@ if [ "$THIS" = ".bash_logout" ] ; then
     }
   
   welcome
-
 # end of .bashrc interactive settings
