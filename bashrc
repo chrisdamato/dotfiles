@@ -67,8 +67,12 @@ if [ "$THIS" = ".bash_logout" ] ; then
   alias .....='cd ../../../..'
   alias dog='sed "/ *#/d; /^ *$/d"' # cat without comments and whitespace
   alias ipsort='sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 '
+  alias lsblk='lsblk --output NAME,TYPE,SIZE,FSTYPE,MOUNTPOINT,LABEL,PARTLABEL,VENDOR'
 
   # NO OUTPUT TO TERMINAL IN THIS SECTION
+
+  # don't like systemctl's auto paging feature
+  export SYSTEMD_PAGER=
 
 
 
@@ -211,19 +215,18 @@ if [ "$THIS" = ".bash_logout" ] ; then
     
   fi # color terminal
 
-  export PS1="\n\! \w\n\[\e[1;\$( [[ \$USER == root ]] && echo -n 31 || echo -n 32 )m\]\u\[\e[0m\]@$(pscolor $HOSTNAME)\$ "
+  export PS1="\n\! \w\n\[\e[1;\$( [[ \$USER == root ]] && echo -n 31 || echo -n 32 )m\]\u\[\e[0m\]@$(pscolor $(hostname -s ))\$ "
   export PROMPT_COMMAND="history -a"
 #  trap 'echo -ne "\033]0;$BASH_COMMAND\007"' DEBUG
 
-  function welcome() {  
+  function welcome() { 
     [ -f /etc/redhat-release ] && echo $(colorize $(cat /etc/redhat-release) )
-    for A in $(for O in i m o p r s ; do uname -$O; done | sort | uniq); do 
-      echo -n $(colorize $A) " "; 
-    done
+    for A in $(for O in i m o p r s ; do uname -$O; done | sort | uniq); do echo -n $(colorize $A) " "; done; echo
     # print ip addresses (non-lo) if found with ip command
-    grep "inet\ .*[^l][^o]$" <( ip a 2>/dev/null ) \
-    | tr '/' ' ' | awk '{print $NF" "$2}'
+    # formerly: grep "inet\ .*[^l][^o]$" <( ip a 2>/dev/null ) | tr '/' ' ' | awk '{print $NF" "$2}'
+    hostname
+    ip -o -f inet a |grep -v '127\.0\.0\.1'|tr '/' ' '|awk '{print $2, $4}'
     }
-
+  
   welcome
 # end of .bashrc interactive settings

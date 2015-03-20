@@ -2,11 +2,11 @@
     {
         "link": {
  	    "~/.bashrc": "bashrc"
+ 	    ,"~/.bash_profile": "bashrc"
             ,"~/.stalonetrayrc":"xmonad/stalonetray.conf"
  	    ,"~/.dir_colors": ".dir_colors"
             ,"~/.Xresources": "Xresources"
             ,"~/.xmonad": "xmonad"
-            ,"~/.config/xfce4/terminal/terminalrc": "terminalrc"
          }
     },
     {
