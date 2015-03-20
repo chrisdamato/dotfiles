@@ -4,7 +4,7 @@ D="BVPD"
 U='administrator'
 P=""
 # geometry of current window
-CURRENT_G=$(A=$(mktemp); echo -ne "\033]0;$A\007"; sleep 0.1; xwininfo -name "$A"|awk '/Width:/{printf "%sx",$2}/Height:/{ printf "%s",$2}')
+#CURRENT_G=$(A=$(mktemp); echo -ne "\033]0;$A\007"; sleep 0.1; xwininfo -name "$A"|awk '/Width:/{printf "%sx",$2}/Height:/{ printf "%s",$2}')
 
 case $1 in
 

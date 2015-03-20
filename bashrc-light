@@ -50,8 +50,9 @@ if [ "$THIS" = ".bash_logout" ] ; then
   # Set the initial path
   pathprepend $HOME/dotfiles
 
+  # these days we are mostly placing this in /etc/profile.d as damato.sh -- 2015-03
   # load system profile scripts
-  for script in /etc/profile.d/*.sh ; do [ -r $script ] && . $script ; done
+  #  for script in /etc/profile.d/*.sh ; do [ -r $script ] && . $script ; done
 
   # Aliases and functions
   [ $(uname) = FreeBSD ] && alias ls="ls -FCG" || alias ls="ls -FC --color=auto"
@@ -68,6 +69,8 @@ if [ "$THIS" = ".bash_logout" ] ; then
   alias dog='sed "/ *#/d; /^ *$/d"' # cat without comments and whitespace
   alias ipsort='sort -n -t . -k 1,1 -k 2,2 -k 3,3 -k 4,4 '
   alias lsblk='lsblk --output NAME,TYPE,SIZE,FSTYPE,MOUNTPOINT,LABEL,PARTLABEL,VENDOR'
+  alias pkill='pkill -e -9'
+  export PUBKEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZ96eieFTn4u4YwugIcSAyvyQJKc/eP638phl8rMdqYd6C+1sS18ibXV4NZ1flheWAfyIj2q+WYoe5KpkqZsa7rRWfx2QUzgcYa09ziCM/p4p+SYicrc8BPyT4nh1d6HEQ+8ArDDfKW48YsirmL0Axmzluj76BSGshnWhViyWOQXY18o4d6xe00pHepQu7UcMiV4zIhhglXjILfK3qtYtZJr5jdaz3VDnU5FRtfKh/n5S3NIVzHV57iU/xAums71UtLkdxfXljbd1aGCclXoQbegmiv8mvxBM8a1gqTqustRwOArQ9EitIX7zLhWnEytKuw78YE5/HRrPJ72yV9S0b"
 
   # NO OUTPUT TO TERMINAL IN THIS SECTION
 
@@ -80,7 +83,7 @@ if [ "$THIS" = ".bash_logout" ] ; then
 [[ ! "$-" =~ "i" ]] && return
 
   # if .bash_profile is not already a hard link to this file, make it so
-  [ ! -f ~/.bash_profile ] && ln ~/.bashrc ~/.bash_profile -f
+  # [ ! -f ~/.bash_profile ] && ln ~/.bashrc ~/.bash_$profile -f
 
   # just print a blank line if we are running interactively
   echo
@@ -218,6 +221,11 @@ if [ "$THIS" = ".bash_logout" ] ; then
   export PS1="\n\! \w\n\[\e[1;\$( [[ \$USER == root ]] && echo -n 31 || echo -n 32 )m\]\u\[\e[0m\]@$(pscolor $(hostname -s ))\$ "
   export PROMPT_COMMAND="history -a"
 #  trap 'echo -ne "\033]0;$BASH_COMMAND\007"' DEBUG
+
+  function ipaddresses() {
+
+   for I in $(ifconfig -l -u inet|tr ' ' '\n'|grep -v lo); do echo $I $(ifconfig $I inet | grep -Eo "inet [0-9.]+" | cut -d' ' -f2) ; done
+   }
 
   function welcome() { 
     [ -f /etc/redhat-release ] && echo $(colorize $(cat /etc/redhat-release) )

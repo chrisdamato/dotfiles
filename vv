@@ -1,5 +1,10 @@
 #!/bin/bash
-[ $(basename $0) = vv ] && CMD="vncviewer Fullscreen ViewOnly PasswordFile=~/vnc Log *:stdout:100 $*"
-[ $(basename $0) = vc ] && CMD="vncviewer Fullscreen PasswordFile=~/vnc Log *:stdout:100 $*"
+TARGET="$*"
+if [[ "$TARGET" =~ ^[0-9]+$ ]] ; then
+  TARGET="10.18.3.$TARGET"
+  echo $TARGET
+fi 
+[ $(basename $0) = vv ] && CMD="vncviewer Fullscreen ViewOnly PasswordFile=~/vnc Log *:stdout:100 $TARGET"
+[ $(basename $0) = vc ] && CMD="vncviewer Fullscreen PasswordFile=~/vnc Log *:stdout:100 $TARGET"
 echo $CMD
 eval $CMD
