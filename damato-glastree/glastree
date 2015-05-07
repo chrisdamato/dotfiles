@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin
 
 #
 # glastree -- build dated, versioned tree of sourcedir, usually per diem
@@ -37,7 +37,7 @@ $count_skip = 0;
 $count_exclude = 0;
 
 
-my $version = "glastree v1.03 stable, http://igmus.org/code/\n";
+my $version = "damato-mangled glastree v1.03 stable, http://igmus.org/code/\n";
 
 main ();
 

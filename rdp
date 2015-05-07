@@ -1,24 +1,18 @@
 #!/bin/bash
-H="$1"
-D="BVPD"
-U='administrator'
-P=""
+TARGET="$1"
+if [[ "$TARGET" =~ ^[0-9]+$ ]] ; then
+  TARGET="10.18.3.$TARGET"
+  echo $TARGET
+fi 
+H="$TARGET"
 # geometry of current window
 #CURRENT_G=$(A=$(mktemp); echo -ne "\033]0;$A\007"; sleep 0.1; xwininfo -name "$A"|awk '/Width:/{printf "%sx",$2}/Height:/{ printf "%s",$2}')
 
-case $1 in
+RDPUSER=""
 
-	freenas) U="root"; P=""; D=""; H="10.18.3.4" ;;
-	s4) H="10.18.3.9";;
-	189|nas) H="10.18.3.189"; D=""; P="";;
-	bob|bobed) H=bobedmundsvr;D="bobedmundsvr";P=\#admin2010\$;;
-
-
-	esac
-# C="xfreerdp --no-nla --ignore-certificate -K -g 1800x950 -u $U -p $P -d $D $H"
-C="rdesktop -K -g 1800x950 -u $U -p $P ${D:+-d $D} $H"
-echo $C
-nohup $C > "nohup-$H.out" &
-cat "nohup-$H.out"
-echo $?
-
+xfreerdp --no-nla --ignore-certificate $2 $3 $4 $5 -g 1800x1000 $TARGET
+#C="rdesktop -K -g 1800x950 -u $U -p $P ${D:+-d $D} $H"
+#echo $C
+#nohup $C > "nohup-$H.out" &
+#cat "nohup-$H.out"
+#echo $?

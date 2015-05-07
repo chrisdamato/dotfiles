@@ -247,7 +247,7 @@ myKeys =  \conf -> mkKeymap conf $
     -- prompt
     , ("M-c g", windowPromptGoto myWaitSP) -- window go prompt
     , ("M-c b", windowPromptBring myWaitSP) -- window bring prompt
-    , ("M-S-<Backspace>", AL.launchApp mySP { defaultText = "~" } "pcmanfm") -- directory prompt
+    , ("M-S-<Backspace>", AL.launchApp mySP { defaultText = "~/Downloads" } "pcmanfm") -- directory prompt
     --, ("M-g", runOrRaise "~/.xmonad/bin/window-go.sh" (resource =? "WindowGo" <&&> className =? "Gpicker")) -- window go
     --, ("M-b", runOrRaise "~/.xmonad/bin/window-bring.sh" (resource =? "WindowBring" <&&> className =? "Gpicker")) -- window bring
     , ("M-p", raiseMaybe (spawn "gmrun") (className =? "Gmrun")) -- gmrun
@@ -503,7 +503,8 @@ myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","boro","pers","-"]
 myFloatManageHook = composeOne . concat $
     [ [ (className =? "Gsimplecal" -?> doRectFloat (W.RationalRect 0.75 0.02 0.25 0.23))
 --      , (className =? "VirtualBox" -?> doRectFloat (W.RationalRect 0 0 1 1))
-      , (className =? "xfreerdp" -?> doRectFloat (W.RationalRect 0 0.02 1 1 ))
+--      , (className =? "VirtualBox" -?> doRectFloat (W.RationalRect 0 0 1 1))
+--      , (className =? "xfreerdp" -?> doRectFloat (W.RationalRect 0 0.02 1 1 ))
       , (className =? "Screenkey" -?> doIgnore)
       , (role =? "gimp-toolbox" -?> doMaster)
       ]
@@ -511,7 +512,7 @@ myFloatManageHook = composeOne . concat $
     , [ className =? x -?> doMaster | x <- masters ]
     ]
     where
-      cCenter = [ "Gmrun", "Gpicker", "Gcolor2", "xfreerdp", "rdesktop" ]
+      cCenter = [ "vncviewer","Gmrun", "Gpicker", "Gcolor2", "xfreerdp", "rdesktop" ]
       masters = [ "Emacs","Gimp" ]
       doCenterFloat' = doCenterFloat <+> doMaster
       doMaster = doF W.shiftMaster
