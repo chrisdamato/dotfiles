@@ -42,11 +42,11 @@
         export $PATHVARIABLE="${!PATHVARIABLE:+${!PATHVARIABLE}:}$1"
     }
 
-    # function used to update this script from the master copy
-    alias download-damato.sh="echo curl scratch.chrisdamato.com/damato.sh \> $BASH_SOURCE"
-    alias upload-damato.sh="echo ssh damato@scratch.chrisdamato.com \'cp damato.sh damato.sh.\$\(date +%s\) \&\& tee damato.sh\' \< $BASH_SOURCE"
-    alias .d="source $BASH_SOURCE"
-    alias .e="${EDITOR:-vim} $BASH_SOURCE"
+    # changes 
+    alias ..pull="echo curl scratch.chrisdamato.com/damato.sh \> $BASH_SOURCE # pull"
+    alias ..push="echo ssh damato@scratch.chrisdamato.com \'cp damato.sh damato.sh.\$\(date +%s\) \&\& tee damato.sh\' \< $BASH_SOURCE # push"
+    alias ..s="source $BASH_SOURCE"
+    alias ..e="${EDITOR:-vim} $BASH_SOURCE"
 
     # Set the initial path
     pathprepend $HOME/dotfiles
@@ -225,7 +225,7 @@
 		}
 
 
-	function colorize() {
+	function _colorize() {
 		# print hash-based colored text
 		[[ -z "$@" ]] && echo -en "\e[0m" && return
 		echo -en "$(colr $*)${*}$(colr)";
@@ -233,7 +233,7 @@
 
     else
          #no color terminal 
-        function colorize() { echo -n "$@"; }
+        function _colorize() { echo -n "$@"; }
         function pscolor() { echo -n "$@"; }
         
     fi # color terminal
@@ -255,8 +255,8 @@
     }
 
     function welcome() { 
-        [ -f /etc/redhat-release ] && echo $(colorize $(cat /etc/redhat-release) )
-        for A in $(for O in i m o p r s ; do uname -$O; done | sort | uniq); do echo -n $(colorize $A) " "; done; echo
+        [ -f /etc/redhat-release ] && echo $(_colorize $(cat /etc/redhat-release) )
+        for A in $(for O in i m o p r s ; do uname -$O; done | sort | uniq); do echo -n $(_colorize $A) " "; done; echo
         # print ip addresses (non-lo) if found with ip command
         # formerly: grep "inet\ .*[^l][^o]$" <( ip a 2>/dev/null ) | tr '/' ' ' | awk '{print $NF" "$2}'
 	echo "This: $BASH_SOURCE"

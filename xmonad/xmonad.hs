@@ -250,7 +250,7 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-S-<Backspace>", AL.launchApp mySP { defaultText = "~/Downloads" } "pcmanfm") -- directory prompt
     --, ("M-g", runOrRaise "~/.xmonad/bin/window-go.sh" (resource =? "WindowGo" <&&> className =? "Gpicker")) -- window go
     --, ("M-b", runOrRaise "~/.xmonad/bin/window-bring.sh" (resource =? "WindowBring" <&&> className =? "Gpicker")) -- window bring
-    , ("M-p", raiseMaybe (spawn "gmrun") (className =? "Gmrun")) -- gmrun
+    , ("M-r", raiseMaybe (spawn "gmrun") (className =? "Gmrun")) -- gmrun
 
     , ("M-S-s", spawn "x-www-browser \"http://www.google.com/search?q=`xclip -o`\"") -- search selection
     , ("M-S-o", spawn "xopen -") -- open current selection
@@ -269,7 +269,7 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-c t", raiseNextMaybe (spawn $ myTerminal ++ " -name htop -e htop") (resource =? "htop")) -- Top
     , ("M-c r", raiseNextMaybe (spawn "pcmanfm") (resource =? "pcmanfm")) -- File Browser
     , ("M-c h", spawn "~/.xmonad/bin/xmonad-key.sh") -- Help
-    , ("M-c i", spawn "xp") -- Window Info
+    -- , ("M-c i", spawn "xp") -- Window Info
     , ("M-c m", manPrompt mySP ) -- xmonad prompt
     , ("M-c o", AL.launchApp mySP "xopen" ) -- open prompt
     , ("M-c x", spawn "xkill") -- Kill X app
@@ -292,8 +292,8 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-a", rotSlavesUp) -- rotate slaves up
     , ("M-S-a", rotSlavesDown) -- rotate slaves down
     , ("M-m", windows W.focusMaster) -- focus master
-    , ("M-<Return>", promote) -- promote to masterw
-    , ("XM-z", focusUrgent) -- focus urgent
+    -- , ("M-<Return>", promote) -- promote to masterw
+    , ("M-z", focusUrgent) -- focus urgent
     , ("M-S-j", windows W.swapDown  ) -- swap down
     , ("M-S-k", windows W.swapUp    ) -- swap up
     , ("M-S-h", sendMessage $ Swap L    ) -- swap up
@@ -306,14 +306,14 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-h", sendMessage Shrink) -- shrink master
     , ("M-l", sendMessage Expand) -- expand master
 
-    , ("XM-h", sendMessage $ Go L) -- focus left
-    , ("XM-j", sendMessage $ Go D) -- focus down
-    , ("XM-k", sendMessage $ Go U) -- focus up
-    , ("XM-l", sendMessage $ Go R) -- focus right
-    , ("XM-S-h", sendMessage $ Swap L) -- swap left
-    , ("XM-S-j", sendMessage $ Swap D) -- swap down
-    , ("XM-S-k", sendMessage $ Swap U) -- swap up
-    , ("XM-S-l", sendMessage $ Swap R) -- swap right
+--    , ("M-h", sendMessage $ Go L) -- focus left
+--    , ("M-j", sendMessage $ Go D) -- focus down
+--    , ("M-k", sendMessage $ Go U) -- focus up
+--    , ("M-l", sendMessage $ Go R) -- focus right
+--    , ("M-S-h", sendMessage $ Swap L) -- swap left
+--    , ("M-S-j", sendMessage $ Swap D) -- swap down
+--    , ("M-S-k", sendMessage $ Swap U) -- swap up
+--    , ("M-S-l", sendMessage $ Swap R) -- swap right
     , ("M-C-h", sendMessage $ Move L) -- move left
     , ("M-C-j", sendMessage $ Move D) -- move down
     , ("M-C-k", sendMessage $ Move U) -- move up
@@ -367,7 +367,7 @@ myKeys =  \conf -> mkKeymap conf $
     -- "M-S-[1..9,0,-]" -- Move client to workspace N
     -- "M-C-[1..9,0,-]" -- Copy client to workspace N
     [("M-" ++ m ++ [k], windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) (['1' .. '9'] ++ ['0', '-'])
+        | (i, k) <- zip (XMonad.workspaces conf) (['1' .. '9'] ++ ['0', 'b', 'p', '-'])
         , (f, m) <- [ (W.greedyView, "")
                     , (W.shift, "S-")
                     , (copy, "C-")
@@ -383,7 +383,8 @@ myKeys =  \conf -> mkKeymap conf $
     -- "M-S-{w,e,r}" -- Move client to screen 1, 2, or 3
     --
     [("M-" ++ m ++ k, screenWorkspace sc >>= flip whenJust (windows . f))
-        | (k, sc) <- zip ["w", "e", "r"] [0..]
+    --  | (k, sc) <- zip ["w", "e", "r"] [0..]
+        | (k, sc) <- zip ["w", "e"] [0..]
         , (f, m) <- [(W.view, ""), (W.shift, "S-")]]
     ++
     [ ("M-'", prevScreen) -- Prev Screen
@@ -397,6 +398,12 @@ myKeys =  \conf -> mkKeymap conf $
     -- HiddenNonEmptyWS
     [ ("M-]", windows . W.greedyView =<< findWorkspace getSortByIndexNoSP Next HiddenNonEmptyWS 1) -- go to next workspace
     , ("M-[", windows . W.greedyView =<< findWorkspace getSortByIndexNoSP Prev HiddenNonEmptyWS 1) -- go to prev workspace
+    , ("M-C-]", windows . W.greedyView =<< findWorkspace getSortByIndexNoSP Next EmptyWS 1) -- go to next empty workspace
+    , ("M-C-[", windows . W.greedyView =<< findWorkspace getSortByIndexNoSP Prev EmptyWS 1) -- go to prev empty workspace
+    , ("M-S-]", windows . W.shift =<< findWorkspace getSortByIndexNoSP Next HiddenNonEmptyWS 1) -- shift to next workspace
+    , ("M-S-[", windows . W.shift =<< findWorkspace getSortByIndexNoSP Prev HiddenNonEmptyWS 1) -- shift to prev workspace
+    , ("M-S-C-]", windows . W.shift =<< findWorkspace getSortByIndexNoSP Next EmptyWS 1) -- shift to next empty workspace
+    , ("M-S-C-[", windows . W.shift =<< findWorkspace getSortByIndexNoSP Prev EmptyWS 1) -- shift to next empty workspace
     , ("M-<D>", windows . W.greedyView =<< findWorkspace getSortByIndexNoSP Next HiddenNonEmptyWS 1) -- go to next workspace
     , ("M-<U>", windows . W.greedyView =<< findWorkspace getSortByIndexNoSP Prev HiddenNonEmptyWS 1) -- go to prev workspace
     , ("M-S-C-<D>", windows . W.shift =<< findWorkspace getSortByIndexNoSP Next HiddenNonEmptyWS 1) -- shift to next workspace
