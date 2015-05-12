@@ -540,7 +540,7 @@ myShiftManageHook = composeOne . concat $
                     , ("Skype", "9.im")
                     , ("Gimp", "8.gimp")
                     , ("Emacs", "3.emacs")
-                    --, ("xfreerdp", "rdp-x")
+                    , ("xfreerdp", "999")
 --                    , ("VirtualBox","7")
                     ]
       ]

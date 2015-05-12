@@ -46,6 +46,7 @@
     alias download-damato.sh="echo curl scratch.chrisdamato.com/damato.sh \> $BASH_SOURCE"
     alias upload-damato.sh="echo ssh damato@scratch.chrisdamato.com \'cp damato.sh damato.sh.\$\(date +%s\) \&\& tee damato.sh\' \< $BASH_SOURCE"
     alias .d="source $BASH_SOURCE"
+    alias .e="${EDITOR:-vim} $BASH_SOURCE"
 
     # Set the initial path
     pathprepend $HOME/dotfiles
@@ -56,13 +57,14 @@
 
 
     # want to support Linux, FreeBSD, and Cygwin for the basics at least
-    if [[ "$(uname)" =~ cygwin ]] ; then
+    SYSTEM_TYPE="$(uname)";
+    SYSTEM_TYPE="${SYSTEM_TYPE,,}"
+    if [[ "$SYSTEM_TYPE" =~ cygwin ]] ; then
         export CYGWIN=YES
         alias sudo=exec
-        alias curl='echo use \\curl or lynx -source'
 	fi
-    [[ "$(uname)" =~ FreeBSD ]] && FREEBSD=YES
-    [[ "$(uname)" =~ Linux ]] && LINUX=YES
+    [[ "$SYSTEM_TYPE" =~ freebsd ]] && FREEBSD=YES
+    [[ "$SYSTEM_TYPE" =~ linux ]] && LINUX=YES
 
 
 
@@ -153,6 +155,14 @@
     # backup a file with a timestamp
     function bu() { cp $1 $1-$(date +%Y-%m-%d-%H-%M) -vba ;} 
 
+    # print a multiline label on dymo - not portable
+    function label() { echo -e "\nEnter your multi-line label text. End with Ctrl+D\n";
+	cat | sed 's/$/\\n/g'| tr -d \\n > /tmp/foo; 
+	glabels-3-batch /mnt/damato-ext/Dropbox/Boro/dymo-plain-11pt-droid-serif.glabels \
+		-i /tmp/foo -o >(lp -n1)  
+	}
+
+
     # systemd shortcuts
     for C in start stop status enable disable restart; do alias $C="systemctl $C"; done
 
@@ -233,12 +243,12 @@
 #    trap 'echo -ne "\033]0;$BASH_COMMAND\007"' DEBUG
 
     function ipaddresses() {
-        if [[ "$(uname)" =~ "FreeBSD" ]] ; then
+        if [[ $FREEBSD ]] ; then
             for I in $(ifconfig -l -u inet|tr ' ' '\n'|grep -v lo); do 
                 echo $I $(ifconfig $I inet | grep -Eo "inet [0-9.]+" | cut -d' ' -f2)  
                 done
-        elif [[ "$(uname)" =~ "cygwin" ]] ; then
-            netsh i i sh con | grep "IP Address:" | grep -v "127.0.0.1"
+        elif [[ $CYGWIN ]] ; then
+            netsh i i sh con | grep "IP Address:" | grep -v "127.0.0.1" | grep -oE '([0-9]{1,3}\.?){4}'
         else
             ip -o -f inet a |grep -v '127\.0\.0\.1'|tr '/' ' '|awk '{print $2, $4}'
         fi
@@ -249,8 +259,12 @@
         for A in $(for O in i m o p r s ; do uname -$O; done | sort | uniq); do echo -n $(colorize $A) " "; done; echo
         # print ip addresses (non-lo) if found with ip command
         # formerly: grep "inet\ .*[^l][^o]$" <( ip a 2>/dev/null ) | tr '/' ' ' | awk '{print $NF" "$2}'
+	echo "This: $BASH_SOURCE"
         hostname
         ipaddresses
+        if [ $LINUX ] || [ $FREEBSD ]; then
+            echo
+            fi
         if [ $CYGWIN ]; then
             echo '[31mnotes:[0m'
             echo '     lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg'
