@@ -221,14 +221,6 @@ myTheme = defaultTheme
 myScratchTerminal = "urxvt256c  +sb -fg white -bg black -fn  \"xft:Droid Sans Mono:pixelsize=13:antialias=true\" +ptab -letsp -1 -fade 30 -keysym.Home \"\\033[1~\" -keysym.End \"\\033[4~\" -keysym.C-Left \"\\033[1;5D\" -keysym.C-Right \"\\033[1;5C\" -tn xterm-color -sl 65535"
 myScratchTerminalClass = "urxvt256c"
 
-pads = [ NS "term"
-         --(myScratchTerminal ++ " --name scratchpad")
-         -- gnome-term or xfce4 do not use --name properly so...
-         (myScratchTerminal )
-         (resource =? "scratchpad" <&&> className =? myScratchTerminalClass)
---          (className =? myScratchTerminalClass)
-         (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4)
-       ]
 
 
 --pads = [ NS "term" 
@@ -236,6 +228,9 @@ pads = [ NS "term"
 --          (resource =? "scratchpad" <&&> className =? "URxvt") 
 --          (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4)
 --       ]
+pads = [ NS "term" "urxvt -name scratchpad -e sh -l -c 'tmux has -t quake && tmux attach -t quake || tmux new -s quake'" (resource =? "scratchpad" <&&> className =? "URxvt") (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4)
+       , NS "stardict" "killall stardict; stardict" (className =? "Stardict") (customFloating $ W.RationalRect 0 0.5 0.4 0.5)
+       ]
 
 -- unused char
 -- a, x, y, ', m
