@@ -64,7 +64,10 @@
         alias sudo=exec
 	fi
     [[ "$SYSTEM_TYPE" =~ freebsd ]] && FREEBSD=YES
-    [[ "$SYSTEM_TYPE" =~ linux ]] && LINUX=YES
+    if [[ "$SYSTEM_TYPE" =~ linux ]]; then
+        LINUX=YES
+
+    fi
 
 
 
@@ -239,7 +242,12 @@
     fi # color terminal
 
     export PS1="\n\! \w\n\[\e[1;\$( [[ \$USER == root ]] && echo -n 31 || echo -n 32 )m\]\u\[\e[0m\]@$(pscolor $(hostname -s ))\$ "
-    export PROMPT_COMMAND="history -a"
+
+    # actions before displaying prompt
+    # set terminal window title
+    function term_title() { echo -ne "\033]0;$USER@$HOSTNAME:$PWD\007"; }
+    # append to history
+    export PROMPT_COMMAND="history -a; term_title"
 #    trap 'echo -ne "\033]0;$BASH_COMMAND\007"' DEBUG
 
     function ipaddresses() {
