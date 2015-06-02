@@ -10,7 +10,7 @@ H="$TARGET"
 
 RDPUSER=""
 
-xfreerdp --no-nla --ignore-certificate $2 $3 $4 $5 -g 1800x1000 $TARGET
+xfreerdp --no-nla --ignore-certificate $2 $3 $4 $5 -g 1800x1000 $TARGET &
 #C="rdesktop -K -g 1800x950 -u $U -p $P ${D:+-d $D} $H"
 #echo $C
 #nohup $C > "nohup-$H.out" &

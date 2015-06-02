@@ -176,6 +176,17 @@ colorBlue            = "#008dd5"
 colorYellow          = "#fee100"
 colorWhite           = "#cfbfad"
 
+colorMoloWhite     = "#F8F8F2"
+colorMoloBlack     = "#000000"
+--colorMoloBlack     = "#272822"
+colorMoloPurple    = "#AE81FF"
+colorMoloCyan      = "#66D9EF"
+colorMoloTan       = "#E6DB74"
+colorMoloDkGrey    = "#75715E"
+colorMoloRed       = "#F92672"
+colorMoloLtBlue    = "#66D9EF"
+
+
 myLogHook h j = do
   dynamicLogWithPP $ wsPP { ppOutput = hPutStrLn h }
   dynamicLogWithPP $ wsPP { ppOutput = hPutStrLn j }
@@ -206,15 +217,15 @@ myTheme = defaultTheme
           { fontName = "xft:" ++ myFont ++ ":pixelsize=14"
           , decoHeight = 20
           , decoWidth = 400
-          , activeColor = myFocusedBorderColor
-          , inactiveColor = "#222222"
-          , urgentColor = "#073642"
-          , activeBorderColor = myFocusedBorderColor
-          , inactiveBorderColor = "#586e75"
-          , urgentBorderColor = "#586e75"
-          , activeTextColor = "#002b36"
-          , inactiveTextColor = "#839496"
-          , urgentTextColor = "#dc322f"
+          , activeColor = colorMoloBlack --background
+          , inactiveColor = colorMoloBlack --background
+          , urgentColor = colorMoloRed --background
+          , activeBorderColor = colorMoloCyan
+          , inactiveBorderColor = colorMoloDkGrey
+          , urgentBorderColor = colorMoloRed
+          , activeTextColor = colorMoloWhite
+          , inactiveTextColor = colorMoloDkGrey
+          , urgentTextColor = colorMoloWhite
           }
 
 -- myScratchTerminal = "xfce4-terminal"
@@ -287,7 +298,7 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-a", rotSlavesUp) -- rotate slaves up
     , ("M-S-a", rotSlavesDown) -- rotate slaves down
     , ("M-m", windows W.focusMaster) -- focus master
-    -- , ("M-<Return>", promote) -- promote to masterw
+    , ("M-<Return>", promote) -- promote to masterw
     , ("M-z", focusUrgent) -- focus urgent
     , ("M-S-j", windows W.swapDown  ) -- swap down
     , ("M-S-k", windows W.swapUp    ) -- swap up
