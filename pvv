@@ -1,11 +1,25 @@
 #!/bin/bash
-TARGET="$*"
-if [[ "$TARGET" =~ ^[0-9]+$ ]] ; then
-  TARGET="10.18.3.$TARGET"
-  echo $TARGET
-fi 
+# TARGET="$*"
+# if [[ "$TARGET" =~ ^[0-9]+$ ]] ; then
+#   TARGET="10.18.3.$TARGET"
+#   echo $TARGET
+# fi 
 
-echo $(basename $0)
+AARGH=""
+VIA=""
+while (( $# )); do 
+    if [[ "$1" == "pd" ]] ; then
+        VIA="-via hq"
+    elif [[ "$1" =~ ^[0-9]+$ ]]; then
+        AARGH="${AARGH} 10.18.3.$1"
+    else
+        AARGH="${AARGH}${AARGH+ }$1"
+    fi
+    shift
+done;
+
+
+echo "This: $BASH_SOURCE"
 
 [[ $(basename $0) =~ vv ]] && OPT=1
 [[ $(basename $0) =~ vc ]] && OPT=0
@@ -13,7 +27,7 @@ echo $(basename $0)
 
 VNC_COMMAND="vncviewer Fullscreen Viewonly=$OPT PasswordFile=~/vnc Log \
     -SendClipboard -AcceptClipboard -SendPrimary $VIA\
-    $TARGET"
+    $AARGH"
 echo $VNC_COMMAND
 eval $VNC_COMMAND
 
