@@ -31,6 +31,15 @@ if $COLORTERM == 'gnome-terminal'
     colorscheme molokai
     endif
 
+if has("gui_running")
+  set guioptions=acegim
+  set t_Co=256
+  set background=dark
+  colorscheme molokai
+  set nonu
+endif
+
+
 " new ideas from
 " http://vimdoc.sourceforge.net/htmldoc/usr_05.html#vimrc_example.vim 
 "

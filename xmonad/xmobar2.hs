@@ -17,6 +17,8 @@ Config {
         Run Swap ["-t","Swap: <usedratio>%","-H","1024","-L","512","-h","#FFB6B0","-l","#CEFFAC","-n","#FFFFCC"] 10,
         Run Network "eth0" ["-t","Net: <rx>, <tx>","-H","200","-L","10","-h","#FFB6B0","-l","#CEFFAC","-n","#FFFFCC"] 10,
         Run Date "%a %b %_d %l:%M" "date" 10,
+        Run MPD ["-t", "<state>: <artist> - <track>"] 1,
+
 --	Run Com "/bin/bash" ["~/.xmonad/1-gmail"] "gmail" 10,
 --	Run GMail "gmail.chrisdamato.home" "Cart.m3l" ["-t", "Mail: <count>"] 3000,
 
@@ -24,5 +26,5 @@ Config {
     ],
     sepChar = "%",
     alignSep = "}{",
-    template = "}{%StdinReader% <fc=#FFFFCC>%date%</fc>"   
+    template = "}{ %mpd% %StdinReader% <fc=#FFFFCC>%date%</fc>"   
 }

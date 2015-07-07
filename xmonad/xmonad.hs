@@ -258,18 +258,17 @@ myKeys =  \conf -> mkKeymap conf $
     --, ("M-b", runOrRaise "~/.xmonad/bin/window-bring.sh" (resource =? "WindowBring" <&&> className =? "Gpicker")) -- window bring
     , ("M-r", raiseMaybe (spawn "gmrun") (className =? "Gmrun")) -- gmrun
 
-    , ("M-S-s", spawn "x-www-browser \"http://www.google.com/search?q=`xclip -o`\"") -- search selection
+    , ("M-S-s", spawn "google-chrome \"http://www.google.com/search?q=`xclip -o`\"") -- search selection
     , ("M-S-o", spawn "xopen -") -- open current selection
 
     -- app
     --
     -- backslash for work browser, z for home
     -- shift+mod for new, mod for switch to
-    , ("M-\\", runOrRaiseNext "google-chrome-work" (className =? "Google-chrome-work" <||> className =? "Google-chrome" <||> className =? "Chromium")) -- browser
-    , ("M-S-\\", spawn "google-chrome-work" ) 
-    , ("M-z", runOrRaiseNext "google-chrome-home" (className =? "Google-chrome-home" <||> className =? "Google-chrome" <||> className =? "Chromium")) -- browser
-    , ("M-S-z", spawn "google-chrome-home" ) 
-    , ("M-i", runOrRaiseNext "sublime_text" (className =? "sublime_text")) --text editor
+    , ("M-\\", runOrRaiseNext "google-chrome" (className =? "Google-chrome" <||> className =? "Chromium")) -- browser
+    , ("M-S-\\", spawn "google-chrome" ) -- browser incognito
+    , ("M-C-\\", spawn "google-chrome --incognito" ) -- browser incognito
+    , ("M-i", runOrRaiseNext "gvim" (className =? "gvim")) --text editor
     , ("M-u", runOrRaiseNext myTerminal (className =? myTerminalClass <&&> resource /=? "scratchpad")) -- raise next terminal
 
     , ("M-c t", raiseNextMaybe (spawn $ myTerminal ++ " -name htop -e htop") (resource =? "htop")) -- Top
@@ -299,7 +298,7 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-S-a", rotSlavesDown) -- rotate slaves down
     , ("M-m", windows W.focusMaster) -- focus master
     , ("M-<Return>", promote) -- promote to masterw
-    , ("M-z", focusUrgent) -- focus urgent
+    -- , ("M-z", focusUrgent) -- focus urgent
     , ("M-S-j", windows W.swapDown  ) -- swap down
     , ("M-S-k", windows W.swapUp    ) -- swap up
     , ("M-S-h", sendMessage $ Swap L    ) -- swap up

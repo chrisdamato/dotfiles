@@ -9,6 +9,9 @@
 ###   
 # 2015-05 using this as /etc/profile.d/damato.sh these days
 
+# installation notes:
+#   arch: copy to /etc/profile.d, remove ~/.bashrc ~/.bash_profile
+
 # profile-type settings
 
     # The personal initialization file, executed for login shells, NOT every new terminal
@@ -48,6 +51,13 @@
     alias ..s="source $BASH_SOURCE"
     alias ..e="${EDITOR:-vim} $BASH_SOURCE"
     alias ..add-rpmfusion-repos='yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm'
+    function ..list () {
+	    sudo masscan -p139 --rate 512 --wait 1 10.18.3.0/24 2>/dev/null | \
+        cut -d' ' -f6 | \
+        parallel --gnu --timeout 2 'nmblookup -A {1} | perl -ne '"'"'/Looking up status of ([0-9.]+)/ && print "$1\t"; /\s+(\S+)\s+<00>\s-\s+[BM]/ && print "$1\n" '"'"' ' | \
+	ipsort | tee ~/list
+        wc -l < ~/list # windows PCs up. takes 3 sec
+    }
 
     # Set the initial path
     pathprepend $HOME/dotfiles

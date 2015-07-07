@@ -7,25 +7,33 @@
 
 AARGH=""
 VIA=""
+PD=""
+
 while (( $# )); do 
     if [[ "$1" == "pd" ]] ; then
-        VIA="-via hq"
+        VIA="-via pd-proxy"
     elif [[ "$1" =~ ^[0-9]+$ ]]; then
         AARGH="${AARGH} 10.18.3.$1"
+        BYTE="$1"
     else
         AARGH="${AARGH}${AARGH+ }$1"
     fi
     shift
 done;
 
+PASSWD_OPT='PasswordFile=~/vnc'
+if [[ -n "$VIA" && ( "${BYTE}" == "92" || "${BYTE}" == " 93" ) ]]; then
+    PASSWD_OPT=""
+fi
+
 
 echo "This: $BASH_SOURCE"
 
 [[ $(basename $0) =~ vv ]] && OPT=1
 [[ $(basename $0) =~ vc ]] && OPT=0
-[[ $(basename $0) =~ pv ]] && VIA="-via hq"
+[[ $(basename $0) =~ pv ]] && VIA="-via pd-proxy"
 
-VNC_COMMAND="vncviewer Fullscreen Viewonly=$OPT PasswordFile=~/vnc Log \
+VNC_COMMAND="vncviewer Fullscreen Viewonly=$OPT $PASSWD_OPT Log \
     -SendClipboard -AcceptClipboard -SendPrimary $VIA\
     $AARGH"
 echo $VNC_COMMAND
