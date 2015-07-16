@@ -15,3 +15,4 @@ function ssh() {
     echo $SSH_COMMAND
     eval $SSH_COMMAND
 }
+export -f ssh

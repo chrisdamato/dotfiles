@@ -51,13 +51,6 @@
     alias ..s="source $BASH_SOURCE"
     alias ..e="${EDITOR:-vim} $BASH_SOURCE"
     alias ..add-rpmfusion-repos='yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm'
-    function ..list () {
-	    sudo masscan -p139 --rate 512 --wait 1 10.18.3.0/24 2>/dev/null | \
-        cut -d' ' -f6 | \
-        parallel --gnu --timeout 2 'nmblookup -A {1} | perl -ne '"'"'/Looking up status of ([0-9.]+)/ && print "$1\t"; /\s+(\S+)\s+<00>\s-\s+[BM]/ && print "$1\n" '"'"' ' | \
-	ipsort | tee ~/list
-        wc -l < ~/list # windows PCs up. takes 3 sec
-    }
 
     # Set the initial path
     pathprepend $HOME/dotfiles
@@ -100,6 +93,13 @@
     alias lsblk='lsblk --output NAME,TYPE,SIZE,FSTYPE,MOUNTPOINT,LABEL,PARTLABEL,VENDOR'
     alias pkill='pkill -e -9'
     alias screen="screen -L"
+    function ..list () {
+	sudo masscan -p${1:-139} --rate 512 --wait 1 10.18.3.0/24 2>/dev/null | \
+        cut -d' ' -f6 | \
+        parallel --gnu --timeout 2 'nmblookup -A {1} | perl -ne '"'"'/Looking up status of ([0-9.]+)/ && print "$1\t"; /\s+(\S+)\s+<00>\s-\s+[BM]/ && print "$1\n" '"'"' ' | \
+	ipsort | tee ~/list
+        wc -l < ~/list # windows PCs up. takes 3 sec
+    }
 
     export PUBKEY="ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDZ96eieFTn4u4YwugIcSAyvyQJKc/eP638phl8rMdqYd6C+1sS18ibXV4NZ1flheWAfyIj2q+WYoe5KpkqZsa7rRWfx2QUzgcYa09ziCM/p4p+SYicrc8BPyT4nh1d6HEQ+8ArDDfKW48YsirmL0Axmzluj76BSGshnWhViyWOQXY18o4d6xe00pHepQu7UcMiV4zIhhglXjILfK3qtYtZJr5jdaz3VDnU5FRtfKh/n5S3NIVzHV57iU/xAums71UtLkdxfXljbd1aGCclXoQbegmiv8mvxBM8a1gqTqustRwOArQ9EitIX7zLhWnEytKuw78YE5/HRrPJ72yV9S0b"
 

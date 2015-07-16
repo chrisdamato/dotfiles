@@ -4,7 +4,7 @@
 
 -- This is setup for dual 1920x1080 monitors, with the right monitor as primary
 Config {
-    font = "xft:Fixed-12",
+--    font = "xft:Fixed-12",
     bgColor = "#000000",
     fgColor = "#ffffff",
     position = Top
