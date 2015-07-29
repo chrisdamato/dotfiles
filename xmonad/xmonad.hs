@@ -519,7 +519,7 @@ myFloatManageHook = composeOne . concat $
 --      , (className =? "xfreerdp" -?> doRectFloat (W.RationalRect 0 0.02 1 1 ))
       , (className =? "Screenkey" -?> doIgnore)
       , (className =? "ij-ImageJ" -?> doFloat )
-      , (role =? "gimp-toolbox" -?> doMaster)
+      , (role =? "gimp-toolbox" -?> doFloat )
       , (role =? "pop-up" -?> doRectFloat (W.RationalRect 0.75 0.02 0.25 0.23))
       ]
     , [ className =? x -?> doCenterFloat' | x <- cCenter ]
