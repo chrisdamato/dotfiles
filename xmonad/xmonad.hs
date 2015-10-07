@@ -239,8 +239,10 @@ myScratchTerminalClass = "urxvt256c"
 --          (resource =? "scratchpad" <&&> className =? "URxvt") 
 --          (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4)
 --       ]
-pads = [ NS "term" "urxvt -name scratchpad -e sh -l -c 'tmux has -t quake && tmux attach -t quake || tmux new -s quake'" (resource =? "scratchpad" <&&> className =? "URxvt") (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4)
-       , NS "stardict" "killall stardict; stardict" (className =? "Stardict") (customFloating $ W.RationalRect 0 0.5 0.4 0.5)
+pads = [ 
+       NS "gt" "gnome-terminal --profile Guake" (title =? "GUAKE") (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4),
+       NS "term" "urxvt -name scratchpad -e sh -l -c 'tmux has -t quake && tmux attach -t quake || tmux new -s quake'" (resource =? "scratchpad" <&&> className =? "URxvt") (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4),
+       NS "stardict" "killall stardict; stardict" (className =? "Stardict") (customFloating $ W.RationalRect 0 0.5 0.4 0.5)
        ]
 
 -- unused char
@@ -248,7 +250,7 @@ pads = [ NS "term" "urxvt -name scratchpad -e sh -l -c 'tmux has -t quake && tmu
 myKeys =  \conf -> mkKeymap conf $
     [ 
       ("M-S-<Return>", spawn $ XMonad.terminal conf) -- terminal
-    , ("M-`", namedScratchpadAction pads "term") -- quake terminal
+    , ("M-`", namedScratchpadAction pads "gt") -- quake terminal
 
     -- prompt
     , ("M-c g", windowPromptGoto myWaitSP) -- window go prompt
@@ -510,7 +512,7 @@ myLayout = configurableNavigation (navigateColor myActiveBorderColor)
     -- property query
     role = stringProperty "WM_WINDOW_ROLE"
 
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","boro","pers","-"]
+myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","boro","pers","NSP"]
 
 myFloatManageHook = composeOne . concat $
     [ [ (className =? "Gsimplecal" -?> doRectFloat (W.RationalRect 0.75 0.02 0.25 0.23))

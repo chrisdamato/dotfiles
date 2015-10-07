@@ -46,11 +46,13 @@
     }
 
     # changes 
-    alias ..pull="echo curl scratch.chrisdamato.com/damato.sh \> $BASH_SOURCE # pull"
-    alias ..push="echo ssh damato@scratch.chrisdamato.com \'cp damato.sh damato.sh.\$\(date +%s\) \&\& tee damato.sh\' \< $BASH_SOURCE # push"
+    alias ..pull="curl scratch.chrisdamato.com/damato.sh > /etc/profile.d/damato.sh # pull"
+    # alias ..push="echo cat $BASH_SOURCE \| ssh damato@scratch.chrisdamato.com \'cp damato.sh damato.sh.\$\(date +%s\) \&\& cat \> damato.sh \&\& cp damato.sh /var/damato/damato.sh -vb\' # push"
+    alias ..push='rsync /etc/profile.d/damato.sh damato@scratch.chrisdamato.com:/var/damato/damato.sh --backup --suffix .$(date +%s) -v # 2015-08-11'
     alias ..s="source $BASH_SOURCE"
     alias ..e="${EDITOR:-vim} $BASH_SOURCE"
     alias ..add-rpmfusion-repos='yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm'
+    alias ..key='test -d ~/.ssh || mkdir ~/.ssh; echo $PUBKEY >> ~/.ssh/authorized_keys; sort -o ~/.ssh/authorized_keys -u ~/.ssh/authorized_keys'
 
     # Set the initial path
     pathprepend $HOME/dotfiles
@@ -93,6 +95,7 @@
     alias lsblk='lsblk --output NAME,TYPE,SIZE,FSTYPE,MOUNTPOINT,LABEL,PARTLABEL,VENDOR'
     alias pkill='pkill -e -9'
     alias screen="screen -L"
+    alias scrot='scrot "$HOME/Downloads/%Y-%m-%d_$wx$h_scrot.png" -s -e "eog \$f"'
     function ..list () {
 	sudo masscan -p${1:-139} --rate 512 --wait 1 10.18.3.0/24 2>/dev/null | \
         cut -d' ' -f6 | \
@@ -172,17 +175,14 @@
     alias f="firewall-cmd"
     alias pw='cat ~/pw ~/users ~/nbt* ~/keys|grep -iE'
 
+    alias grep='grep --color=auto --binary-files=without-match  --directories=skip'
+
 
     # backup a file with a timestamp
     function bu() { cp $1 $1-$(date +%Y-%m-%d-%H-%M) -vba ;} 
 
     # print a multiline label on dymo - not portable
-    function label() { echo -e "\nEnter your multi-line label text. End with Ctrl+D\n";
-	cat | sed 's/$/\\n/g'| tr -d \\n > /tmp/foo; 
-	glabels-3-batch /mnt/damato-ext/Dropbox/Boro/dymo-plain-11pt-droid-serif.glabels \
-		-i /tmp/foo -o >(lp -n1)  
-	}
-
+    function label() { echo -e "\nEnter your multi-line label text. End with Ctrl+D\n";cat |sed 's/$/\\n/g'| tr -d \\n > /tmp/foo; ( glabels-3-batch /ext/Dropbox/Boro/dymo-plain-11pt-droid-serif.glabels -i /tmp/foo -o >(lp -n1) ) }
 
     # systemd shortcuts
     for C in start stop status enable disable restart; do alias $C="systemctl $C"; done
@@ -268,6 +268,11 @@
     export PROMPT_COMMAND="history -a; term_title"
 #    trap 'echo -ne "\033]0;$BASH_COMMAND\007"' DEBUG
 
+    function ..open() {
+        sudo masscan -p${1:-139} --rate 512 --wait 1 ${2:-10.18.3.0/24} 2> /dev/null | 
+        cut -d' ' -f6 | ipsort
+    }
+
     function ipaddresses() {
         if [[ $FREEBSD ]] ; then
             for I in $(ifconfig -l -u inet|tr ' ' '\n'|grep -v lo); do 
@@ -292,11 +297,24 @@
             echo
             fi
         if [ $CYGWIN ]; then
-            echo '[31mnotes:[0m'
-            echo '     lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg'
-            echo '     install apt-cyg /bin'
+            if [ ! -f /usr/bin/apt-cyg ]; then
+                echo '[31mcygwin first run notes: [0m'
+                echo 'install apt-cyg etc'
+                echo
+                echo '  lynx -source rawgit.com/transcode-open/apt-cyg/master/apt-cyg > apt-cyg && install apt-cyg /bin'
+            fi
+            if ! grep --quiet "$PUBKEY" $HOME/.ssh/authorized_keys; then
+                echo
+                echo Install public key for ssh:
+                echo 31m..key[0m
+                echo
+            fi
+            echo '[32mcygwin notes:[0m'
             echo
-            echo '     lynx -source'
+            echo '    apt-cyg install wget curl vim'
+            echo '    apt-cyg install openssh && ssh-host-config -y -w "$(date)" && ssh-user-config -y -p && net start sshd'
+            echo
+            find /etc/profile.d -name "0*.sh"
             fi
         }
     
