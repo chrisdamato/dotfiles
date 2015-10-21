@@ -6,7 +6,7 @@ PROGNAME=${0##*/}
 PROGVERSION=0.1
 declare VOLUME=100  # volume of speech 0-100
 declare LOOP=0      # number of times to repeat end message, 0=forever
-declare ALARM="Time to go upstairs!" # alarm message
+declare ALARM="Time is up" # alarm message
 declare DEBUG=
 declare LEFT # time until next warning
 
@@ -79,11 +79,14 @@ declare SLEEP
 
 
 
-function repeat () { 
+function _repeat () { 
   mplayer -volume $VOLUME -loop $1 \
     -quiet -nolirc -prefer-ipv4 \
     "http://translate.google.com/translate_tts?tl=en&q=${@:2}" \
     > /dev/null; # only show stderr from mplayer
+}
+function repeat () { 
+  espeak "${@:2}"
 }
 
 function say () { repeat 1 "$*"; }
