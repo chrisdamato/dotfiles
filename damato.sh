@@ -48,7 +48,7 @@
     # changes 
     alias ..pull="curl scratch.chrisdamato.com/damato.sh > /etc/profile.d/damato.sh # pull"
     # alias ..push="echo cat $BASH_SOURCE \| ssh damato@scratch.chrisdamato.com \'cp damato.sh damato.sh.\$\(date +%s\) \&\& cat \> damato.sh \&\& cp damato.sh /var/damato/damato.sh -vb\' # push"
-    alias ..push='rsync /etc/profile.d/damato.sh damato@scratch.chrisdamato.com:/var/damato/damato.sh --backup --suffix .$(date +%s) -v # 2015-08-11'
+    alias ..push='rsync --rsh "ssh -p2222" /etc/profile.d/damato.sh damato@scratch.chrisdamato.com:/var/damato/damato.sh --backup --suffix .$(date +%s) -v # 2015-08-11'
     alias ..s="source $BASH_SOURCE"
     alias ..e="${EDITOR:-vim} $BASH_SOURCE"
     alias ..add-rpmfusion-repos='yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm'
@@ -96,6 +96,7 @@
     alias pkill='pkill -e -9'
     alias screen="screen -L"
     alias scrot='scrot "$HOME/Downloads/%Y-%m-%d_$wx$h_scrot.png" -s -e "eog \$f"'
+    alias node='NODE_NO_READLINE=0 NODE_REPL_HISTORY=$HOME/.node-history NODE_REPL_HISTORY_SIZE=10000 rlwrap node'
     function ..list () {
 	sudo masscan -p${1:-139} --rate 512 --wait 1 10.18.3.0/24 2>/dev/null | \
         cut -d' ' -f6 | \
@@ -182,7 +183,7 @@
     function bu() { cp $1 $1-$(date +%Y-%m-%d-%H-%M) -vba ;} 
 
     # print a multiline label on dymo - not portable
-    function label() { echo -e "\nEnter your multi-line label text. End with Ctrl+D\n";cat |sed 's/$/\\n/g'| tr -d \\n > /tmp/foo; ( glabels-3-batch /ext/Dropbox/Boro/dymo-plain-11pt-droid-serif.glabels -i /tmp/foo -o >(lp -n1) ) }
+    function ..label() { echo -e "\nEnter your multi-line label text. End with Ctrl+D\n";cat |sed 's/$/\\n/g'| tr -d \\n > /tmp/foo; ( glabels-3-batch /ext/Dropbox/Boro/dymo-plain-11pt-droid-serif.glabels -i /tmp/foo -o >(lp -n1) ) }
 
     # systemd shortcuts
     for C in start stop status enable disable restart; do alias $C="systemctl $C"; done
