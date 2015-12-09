@@ -104,17 +104,17 @@ myNormalBorderColor  = "#444444"
 myFocusedBorderColor = "#FF0000"
 myActiveBorderColor  = "#444444"
 
--- shell prompt theme
+-- shell prompt theme - bottom of screen prompt 
 mySP = defaultXPConfig
-       { font = "xft:" ++ myMonoFont ++ ":pixelsize=16"
-       , bgColor           = "#002b36"
-       , fgColor           = "#93a1a1"
-       , bgHLight          = "#93a1a1"
-       , fgHLight          = "#002b36"
-       , borderColor       = "#2aa198"
+       { font = "xft:" ++ myMonoFont ++ ":pixelsize=28"
+       , bgColor           = "#f00"
+       , fgColor           = "#fff"
+       , bgHLight          = "#fff"
+       , fgHLight          = "#f00"
+       , borderColor       = "#f00"
        , promptBorderWidth = 1
 
-       , height            = 22
+       , height            = 36
        , defaultText       = []
        }
 
@@ -187,9 +187,10 @@ colorMoloRed       = "#F92672"
 colorMoloLtBlue    = "#66D9EF"
 
 
-myLogHook h j = do
+-- myLogHook h j = do
+myLogHook h = do
   dynamicLogWithPP $ wsPP { ppOutput = hPutStrLn h }
-  dynamicLogWithPP $ wsPP { ppOutput = hPutStrLn j }
+  -- dynamicLogWithPP $ wsPP { ppOutput = hPutStrLn j }
 
 wsPP = defaultPP 
         { ppOrder               = \(ws:l:t:_)   -> [t, l, ws]
@@ -214,9 +215,9 @@ wsPP = defaultPP
 
 myTheme :: Theme
 myTheme = defaultTheme
-          { fontName = "xft:" ++ myFont ++ ":pixelsize=14"
-          , decoHeight = 20
-          , decoWidth = 400
+          { fontName = "xft:" ++ myFont ++ ":pixelsize=22"
+          , decoHeight = 28
+          , decoWidth = 600
           , activeColor = colorMoloBlack --background
           , inactiveColor = colorMoloBlack --background
           , urgentColor = colorMoloRed --background
@@ -267,10 +268,12 @@ myKeys =  \conf -> mkKeymap conf $
     --
     -- backslash for work browser, z for home
     -- shift+mod for new, mod for switch to
-    , ("M-\\", runOrRaiseNext "google-chrome" (className =? "Google-chrome" <||> className =? "Chromium")) -- browser
-    , ("M-S-\\", spawn "google-chrome" ) -- browser incognito
+    , ("M-\\", runOrRaiseNext "google-chrome" (className =? "google-chrome" <||> className =? "Chromium")) -- browser
+    , ("M-S-\\", spawn "google-chrome" ) -- browser 
+    , ("C-S-\\", spawn "google-chrome" ) -- browser with right hand on laptop
     , ("M-C-\\", spawn "google-chrome --incognito" ) -- browser incognito
-    , ("M-i", runOrRaiseNext "gvim" (className =? "gvim")) --text editor
+    , ("M-C-S-\\", spawn "google-chrome --incognito" ) -- browser incognito
+    , ("M-i", runOrRaiseNext "gvim" ( className =? "Gvim" <||> title =? "GVIM" )) --text editor
     , ("M-u", runOrRaiseNext myTerminal (className =? myTerminalClass <&&> resource /=? "scratchpad")) -- raise next terminal
 
     , ("M-c t", raiseNextMaybe (spawn $ myTerminal ++ " -name htop -e htop") (resource =? "htop")) -- Top
@@ -300,7 +303,7 @@ myKeys =  \conf -> mkKeymap conf $
     , ("M-S-a", rotSlavesDown) -- rotate slaves down
     , ("M-m", windows W.focusMaster) -- focus master
     , ("M-<Return>", promote) -- promote to masterw
-    -- , ("M-z", focusUrgent) -- focus urgent
+    , ("M-z", focusUrgent) -- focus urgent
     , ("M-S-j", windows W.swapDown  ) -- swap down
     , ("M-S-k", windows W.swapUp    ) -- swap up
     , ("M-S-h", sendMessage $ Swap L    ) -- swap up
@@ -434,15 +437,16 @@ myKeys =  \conf -> mkKeymap conf $
 dmenuXinerama :: [String] -> X String
 dmenuXinerama opts = do
     io $ runProcessWithInput "dmenu" [ "-fn"
-                                     , (myFont ++ "-14")
+                                     -- , (myFont ++ "-28")
+                                     ,  "-*-*-*-*-*-*-32-*-*-*-*-*-*-*"
                                      , "-nb"
-                                     , "#1e2320" 
+                                     , "#f00"
                                      , "-nf" 
-                                     , "#acbc90" 
+                                     , "#fff"
                                      , "-sf" 
-                                     , "#0f1a0f"
+                                     , "#f00"
                                      , "-sb"
-                                     , "#f0dfaf"
+                                     , "#fff"
                                      ] (unlines opts)
 
 withWorkspace' :: (String -> X ()) -> X ()
@@ -512,7 +516,7 @@ myLayout = configurableNavigation (navigateColor myActiveBorderColor)
     -- property query
     role = stringProperty "WM_WINDOW_ROLE"
 
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","boro","pers","NSP"]
+myWorkspaces    = ["1","2","3","4","5","6","7","8","9","0","boro","pers","-","NSP"]
 
 myFloatManageHook = composeOne . concat $
     [ [ (className =? "Gsimplecal" -?> doRectFloat (W.RationalRect 0.75 0.02 0.25 0.23))
@@ -609,7 +613,7 @@ main = do
   --  spawn "~/.xmonad/session > ~/.xmonad/session.log"
   --
   wsBar1 <- spawnPipe "/usr/bin/xmobar -x 0 ~/.xmonad/xmobar.hs"
-  wsBar2 <- spawnPipe "/usr/bin/xmobar -x 1 ~/.xmonad/xmobar2.hs"
+--  wsBar2 <- spawnPipe "/usr/bin/xmobar -x 1 ~/.xmonad/xmobar2.hs"
 
   --dzen <- spawnPipe $ "~/.xmonad/bin/xmonad.panel -fn '" ++ myFont ++ "-12'"
   xmonad $ ewmh $ withUrgencyHook LibNotifyUrgencyHook defaultConfig
@@ -629,7 +633,8 @@ main = do
              , layoutHook         = myLayout
              , manageHook         = myManageHook
              , handleEventHook    = myHandleEventHook
-             , logHook            = myLogHook wsBar1 wsBar2
+             , logHook            = myLogHook wsBar1 
+             --, logHook            = myLogHook wsBar1 wsBar2
              --, logHook            = (dynamicLogWithPP $ myDzenPP dzen)
                                     >> setWMName "LG3D"
              , startupHook        = myStartupHook

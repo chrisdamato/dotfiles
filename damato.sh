@@ -46,6 +46,8 @@
     }
 
     # changes 
+    alias dymo="lpr -P dymo"
+    alias lexmark="lpr -P lexmark"
     alias ..pull="curl scratch.chrisdamato.com/damato.sh > /etc/profile.d/damato.sh # pull"
     # alias ..push="echo cat $BASH_SOURCE \| ssh damato@scratch.chrisdamato.com \'cp damato.sh damato.sh.\$\(date +%s\) \&\& cat \> damato.sh \&\& cp damato.sh /var/damato/damato.sh -vb\' # push"
     alias ..push='rsync --rsh "ssh -p2222" /etc/profile.d/damato.sh damato@scratch.chrisdamato.com:/var/damato/damato.sh --backup --suffix .$(date +%s) -v # 2015-08-11'
@@ -168,6 +170,7 @@
     alias please='eval "sudo $(fc -ln -1)"'
     alias gid='dig +noall +answer -x' # reverse dns lookup
 
+    command -v dnf >/dev/null && alias yum="dnf"
     alias yuma="yum --enablerepo=\*"
     alias yyuma="yum -y --enablerepo=\*"
     alias yyum="yum -y"
@@ -294,6 +297,7 @@
 	echo "This: $BASH_SOURCE"
         hostname
         ipaddresses
+        command -v firewall-cmd > /dev/null && firewall-cmd --list-all
         if [ $LINUX ] || [ $FREEBSD ]; then
             echo
             fi
@@ -320,4 +324,5 @@
         }
     
     welcome
+    [ -d ~/Downloads ] && cd Downloads
 # end of .bashrc interactive settings

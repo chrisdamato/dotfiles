@@ -1,1 +1,1 @@
-/usr/bin/scrot "$HOME/Downloads/%Y-%m-%d_$wx$h_scrot.png" -s -e "eog \$f" &
+/usr/bin/scrot "$HOME/Downloads/%Y-%m-%d_%T\$wx\$h_scrot.png" -s -e "eog \$f" &
