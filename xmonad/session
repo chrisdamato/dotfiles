@@ -50,5 +50,16 @@ xfce4-power-manager &
 # turn off caps lock
 setxkbmap -option caps:none &
 
+# make right windows key NOT be mod4 
+xmodmap -e "remove mod4 = Super_R"
+
+# make right windows key be mod5 instead (alt GR?)
+xmodmap -e "add mod5 = Super_R"
+
+# now use xfreerdp or whatever without grabbing WM keys (-K) so Right Windows Key will be windows key for windows
+# WinL+R -> xmonad run
+# WinR+R -> windows run
+
+
 set -x
 # X=1800;O=eDP1;Y=$(( $X * 9 / 16 ));M=( $(cvt -r $X $Y|sed -nr 's/^Modeline (.*)$/\1/p') );xrandr --rmmode $M 2>/dev/null; xrandr --verbose --output $O --newmode ${M[@]}; xrandr --verbose --addmode $O $M; xrandr --verbose --output $O --mode $M #resolution settings

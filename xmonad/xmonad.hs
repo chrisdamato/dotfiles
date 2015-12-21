@@ -241,7 +241,7 @@ myScratchTerminalClass = "urxvt256c"
 --          (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4)
 --       ]
 pads = [ 
-       NS "gt" "gnome-terminal --profile Guake" (title =? "GUAKE") (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4),
+       NS "gt" "gnome-terminal --profile Guake" (title =? "guake") (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4),
        NS "term" "urxvt -name scratchpad -e sh -l -c 'tmux has -t quake && tmux attach -t quake || tmux new -s quake'" (resource =? "scratchpad" <&&> className =? "URxvt") (customFloating $ W.RationalRect 0.2 0.6 0.6 0.4),
        NS "stardict" "killall stardict; stardict" (className =? "Stardict") (customFloating $ W.RationalRect 0 0.5 0.4 0.5)
        ]
