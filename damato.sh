@@ -48,6 +48,7 @@
     # changes 
     alias dymo="lpr -P dymo"
     alias lexmark="lpr -P lexmark"
+    alias pd="tsocks" # for use with socks proxy to PD, example: pd ssh 10.18.3.9 
     alias ..pull="curl scratch.chrisdamato.com/damato.sh > /etc/profile.d/damato.sh # pull"
     # alias ..push="echo cat $BASH_SOURCE \| ssh damato@scratch.chrisdamato.com \'cp damato.sh damato.sh.\$\(date +%s\) \&\& cat \> damato.sh \&\& cp damato.sh /var/damato/damato.sh -vb\' # push"
     alias ..push='rsync --rsh "ssh -p2222" /etc/profile.d/damato.sh damato@scratch.chrisdamato.com:/var/damato/damato.sh --backup --suffix .$(date +%s) -v # 2015-08-11'
