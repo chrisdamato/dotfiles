@@ -43,10 +43,12 @@
 ! URxvt*externalBorder:                 number
 ! URxvt*fadeColor:                      color
 ! URxvt*fading:                         30
-URxvt*font:                           xft:Droid Sans Mono:pixelsize=11
-URxvt*boldFont:                           xft:Droid Sans Mono:pixelsize=11:bold
-URxvt*italicFont:                           xft:Liberation Mono:italic
-URxvt*boldItalicFont:                           xft:Liberation Mono:italic:bold
+!URxvt*font:                           xft:Droid Sans Mono:pixelsize=12
+URxvt*font:                            -*-terminus-medium-*-*-*-14-*-*-*-*-*-*-*
+URxvt*boldFont:                        -*-terminus-bold-*-*-*-14-*-*-*-*-*-*-*
+!URxvt*boldFont:                           xft:Droid Sans Mono:pixelsize=12:bold
+!URxvt*italicFont:                           xft:Liberation Mono:italic
+!URxvt*boldItalicFont:                           xft:Liberation Mono:italic:bold
 
 ! URxvt*foreground:                     color
 ! URxvt*geometry:                       geometry
@@ -65,7 +67,7 @@ URxvt*boldItalicFont:                           xft:Liberation Mono:italic:bold
 ! URxvt*italicFont:                     fontname
 ! URxvt*jumpScroll:                     boolean
 ! URxvt*keysym.sym:                     keysym
-URxvt*letterSpace:                    -1
+!URxvt*letterSpace:                    -2
 ! URxvt*lineSpace:                      number
 ! URxvt*loginShell:                     boolean
 ! URxvt*mapAlert:                       boolean
@@ -105,7 +107,10 @@ URxvt*scrollBar:                      false
 ! URxvt*scrollstyle:                    mode
 URxvt*searchable-scrollback:          C-f
 ! URxvt*secondaryScreen:                boolean
+URxvt*secondaryScreen:                true
+! URxvt*secondaryScreen:                boolean
 ! URxvt*secondaryScroll:                boolean
+URxvt*secondaryScroll:                false
 ! URxvt*selection-autotransform.*:      string
 ! URxvt*selection-pastebin.cmd:         string
 ! URxvt*selection-pastebin.url:         string
@@ -202,3 +207,12 @@ urxvt256c*background: black
 ! white
 *.color7:       #707880
 *.color15:      #c5c8c6
+
+
+! https://ask.fedoraproject.org/en/question/55168/how-to-improve-fonts-and-font-rendering-in-fedora-20/
+Xft.dpi: 96
+Xft.antialias: 1
+Xft.hinting: 1
+Xft.hintstyle: hintslight
+Xft.rgba: rgb
+Xft.lcdfilter: lcddefault

@@ -26,16 +26,17 @@ set showcmd
 set title
 " syntax highlighting on
 syntax on
+"colorscheme darkblue
 if $COLORTERM == 'gnome-terminal'
     set t_Co=256
-    colorscheme molokai
+    colorscheme darkblue
     endif
 
 if has("gui_running")
   set guioptions=acegim
   set t_Co=256
   set background=dark
-  colorscheme molokai
+  colorscheme darkblue
   set nonu
 endif
 

@@ -79,13 +79,13 @@ declare SLEEP
 
 
 
-function _repeat () { 
+function repeat () { 
+  gtts-cli -o /tmp/say.mp3 "${@:2}"
   mplayer -volume $VOLUME -loop $1 \
-    -quiet -nolirc -prefer-ipv4 \
-    "http://translate.google.com/translate_tts?tl=en&q=${@:2}" \
+    -quiet -nolirc /tmp/say.mp3
     > /dev/null; # only show stderr from mplayer
 }
-function repeat () { 
+function _repeat () { 
   espeak "${@:2}"
 }
 
