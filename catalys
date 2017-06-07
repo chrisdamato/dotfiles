@@ -3,5 +3,5 @@ GEOMETRY="$(xrandr --current|sed -nr 's/^.* connected (\w+)\+.*/\1/p'|sed -n ${1
 GEOMETRY="1920x1080"
 echo $GEOMETRY
 #rdesktop 10.18.3.251 -K -u administrator -g workarea -p P@ssw0rd! # Phone system voice mail Avaya Voice Mail Pro server 18.18.3.251 name:catalys-umgbwjo
-rdesktop 10.18.3.251 -K -u administrator -g $GEOMETRY -p P@ssw0rd! # Phone system voice mail Avaya Voice Mail Pro server 18.18.3.251 name:catalys-umgbwjo
+rdesktop CATALYS-UMGBWJO -K -u administrator -g $GEOMETRY -p P@ssw0rd! # Phone system voice mail Avaya Voice Mail Pro server 18.18.3.251 name:catalys-umgbwjo
 

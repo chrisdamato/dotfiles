@@ -1,12 +1,12 @@
 #!/bin/bash
 # set -x # debug!
 # THIS="$(basename -- $0 )"
-###       _                 _                _    
-###    __| |__ _ _ __  __ _| |_ ___       __| |_  
-###   / _` / _` | '  \/ _` |  _/ _ \  _  (_-< ' \ 
-###   \__,_\__,_|_|_|_\__,_|\__\___/ (_) /__/_||_|
-###                                               
-###   
+##       _                 _                _    
+##    __| |__ _ _ __  __ _| |_ ___       __| |_  
+##   / _` / _` | '  \/ _` |  _/ _ \  _  (_-< ' \ 
+##   \__,_\__,_|_|_|_\__,_|\__\___/ (_) /__/_||_|
+##                                               
+##   
 # 2015-05 using this as /etc/profile.d/damato.sh these days
 
 # installation notes:
@@ -49,25 +49,25 @@
     hgrep () 
     { 
         history |
-        grep --color=auto --binary-files=without-match --directories=skip -v grep |
-        grep --color=auto --binary-files=without-match --directories=skip -iE $(echo "$*" | sed 's/ /.*/g') |
-        grep --color=auto --binary-files=without-match --directories=skip -iE $(echo "$*" | sed 's/ /|/g')
+        grep --color=auto -Ev '\b(hg|hgrep)\b' |
+        grep --color=auto -iE $(echo "$*" | sed 's/ /.*/g') |
+        grep --color=auto -iE $(echo "$*" | sed 's/ /|/g')
         }
     alias hg="hgrep"
     alias hr="history -r"
     alias ha="history -a"
-
     alias fw="firewall-cmd"
     alias dymo="lpr -P dymo"
     alias hp="lpr -P hp"
     alias pd="tsocks" # for use with socks proxy to PD, example: pd ssh 10.18.3.9 
-    alias ..pull="curl scratch.chrisdamato.com/damato.sh > /etc/profile.d/damato.sh # pull"
+    alias ..pull="curl scratch.chrisdamato.com/damato.sh | sudo tee /etc/profile.d/damato.sh # pull"
     # alias ..push="echo cat $BASH_SOURCE \| ssh damato@scratch.chrisdamato.com \'cp damato.sh damato.sh.\$\(date +%s\) \&\& cat \> damato.sh \&\& cp damato.sh /var/damato/damato.sh -vb\' # push"
     alias ..push='rsync --rsh "ssh -p2222" /etc/profile.d/damato.sh damato@scratch.chrisdamato.com:/var/damato/damato.sh --backup --suffix .$(date +%s) -v # 2015-08-11'
     alias ..s="source $BASH_SOURCE"
     alias ..e="${EDITOR:-vim} $BASH_SOURCE"
     alias ..add-rpmfusion-repos='yum localinstall --nogpgcheck http://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm http://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm'
     alias ..key='test -d ~/.ssh || mkdir ~/.ssh; echo $PUBKEY >> ~/.ssh/authorized_keys; sort -o ~/.ssh/authorized_keys -u ~/.ssh/authorized_keys'
+    alias z="zathura"
 
     # Set the initial path
     pathprepend $HOME/dotfiles
@@ -112,6 +112,9 @@
     alias screen="screen -L"
     alias scrot='scrot "$HOME/Downloads/%Y-%m-%d_$wx$h_scrot.png" -s -e "eog \$f"'
     alias node='NODE_NO_READLINE=0 NODE_REPL_HISTORY=$HOME/.node-history NODE_REPL_HISTORY_SIZE=10000 rlwrap node'
+    alias df="df -t xfs -t ext4 -t udf -T"
+
+
     function ..list () {
 	sudo masscan -p${1:-139} --rate 512 --wait 1 10.18.3.0/24 2>/dev/null | \
         cut -d' ' -f6 | \
@@ -141,8 +144,8 @@
     HISTCONTROL=ignoredups:ignorespace
     HISTTIMEFORMAT="%F %R "
     HISTIGNORE="&:[bf]g:exit"
-    HISTSIZE=50000
-    HISTFILESIZE=1000000
+    HISTSIZE=1000000
+    HISTFILESIZE=20000000
 
     shopt -s histappend # append to the history file, don't overwrite it
     shopt -s histverify
@@ -190,9 +193,11 @@
 
     alias n="nmcli"
     alias f="firewall-cmd"
-    alias pw='cat ~/pw ~/users ~/nbt* ~/keys|grep -iE'
+    alias pw='cat ~/users ~/pw |grep -iE'
 
     alias grep='grep --color=auto --binary-files=without-match  --directories=skip'
+
+    # function rdp() { xfreerdp -grab-keyboard -sec-nla /cert-ignore +clipboard /workarea /v:$1 /u:$2 /p:$3 $4; }
 
 
     # backup a file with a timestamp
@@ -208,10 +213,12 @@
     if [[ "$DISPLAY" = ":0" ]]; then    xhost +si:localuser:root > /dev/null; fi
 
     # automatic sudo for common admin tasks
-    if [[ ! $EUID == 0 ]] && which sudo &> /dev/null ; then
-        for CMD in systemctl journalctl nmap su service vim apt-get yum dpkg rpm chmod \
-                chown mount umount reboot fdisk parted ip pacman iptables find poweroff firewall-cmd dnf\
-	shutdown reboot find systemctl journalctl; do
+    if [[ $USER == "damato" ]] && [[ ! $EUID == 0 ]] && which sudo &> /dev/null ; then
+        for CMD in \
+                systemctl journalctl nmap su service vim apt-get yum dpkg rpm chmod \
+                dhclient chown mount umount reboot fdisk parted ip pacman iptables find poweroff firewall-cmd dnf \
+            	shutdown reboot find systemctl journalctl virt-manager virt-viewer
+            do
             alias $CMD="sudo $CMD"
             done
         fi
@@ -250,6 +257,9 @@
 		local COUNT="${#COLOR_LIST[*]}"
 		local HASH="$( echo "$@" | cksum | cut -d' ' -f1 )"
 		local INDEX="$(( $HASH % $COUNT))"
+
+        local INDEX=$(( 16#$(echo $HOSTNAME | /usr/bin/md5sum | cut -c1-8) % 16 ))
+
 		local CODE="\e[${COLOR_LIST[$INDEX]}m"
 		# overrides
 		[[ ":damato:chris:" =~ ":$@:" ]] && CODE="\e[0;34m";
@@ -310,7 +320,7 @@
 	echo "This: $BASH_SOURCE"
         hostname
         ipaddresses
-        command -v firewall-cmd > /dev/null && sudo firewall-cmd --list-all
+        # test "$USER" = "damato"  && command -v firewall-cmd > /dev/null && sudo firewall-cmd --list-all
         if [ $LINUX ] || [ $FREEBSD ]; then
             echo
             fi

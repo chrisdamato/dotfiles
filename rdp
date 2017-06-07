@@ -1,16 +1,8 @@
 #!/bin/bash
 TARGET="$1"
-if [[ "$TARGET" =~ ^[0-9]+$ ]] ; then
-  TARGET="10.18.3.$TARGET"
-  echo $TARGET
-fi 
-H="$TARGET"
-# geometry of current window
-#CURRENT_G=$(A=$(mktemp); echo -ne "\033]0;$A\007"; sleep 0.1; xwininfo -name "$A"|awk '/Width:/{printf "%sx",$2}/Height:/{ printf "%s",$2}')
 
-RDPUSER=""
-
-CMD="xfreerdp +clipboard -K --no-nla --ignore-certificate $2 $3 $4 $5 -g 1920x1000 /v:$TARGET"
+CMD="/usr/bin/xfreerdp  +cert-ignore -grab-keyboard $2 $3 $4 $5 /size:1920x1000 /v:$TARGET"
+#CMD="/usr/bin/xfreerdp  -grab-keyboard -sec-nla /cert-ignore $2 $3 $4 $5 /size 1920x1000 /v:$TARGET"
 echo $CMD
 eval $CMD
 #C="rdesktop -K -g 1800x950 -u $U -p $P ${D:+-d $D} $H"
