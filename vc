@@ -13,7 +13,7 @@ while (( $# )); do
     if [[ "$1" == "pd" ]] ; then
         VIA="-via master"
     elif [[ "$1" =~ ^[0-9]+$ ]]; then
-        AARGH="${AARGH} 10.18.3.$1"
+        AARGH="${AARGH} 10.11.11.$1"
         BYTE="$1"
     else
         AARGH="${AARGH}${AARGH+ }$1"
@@ -35,8 +35,9 @@ echo "This: $BASH_SOURCE"
 [[ $(basename $0) =~ pv ]] && VIA="-via master"
 
 VNC_COMMAND="vncviewer Fullscreen Viewonly=$OPT $PASSWD_OPT Log \
-    -SendClipboard -AcceptClipboard -SendPrimary $VIA\
+    -SendClipboard -AcceptClipboard -SendPrimary -DotWhenNoCursor -Shared
+    $VIA\
     $AARGH"
 echo $VNC_COMMAND
-eval $VNC_COMMAND
+eval $VNC_COMMAND &
 
